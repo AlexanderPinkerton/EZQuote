@@ -68,7 +68,7 @@ public class JSONNewsAsyncTask extends AsyncTask<String, Void, ArrayList<Headlin
 		super.onPostExecute(result);
 		
 		if(result != null){
-			Log.d("DEMO", result.toString());
+			//Log.d("DEMO", result.toString());
 		}
 		
 	}

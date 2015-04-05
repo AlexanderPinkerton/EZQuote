@@ -81,7 +81,7 @@ public class JSONUtility {
 					JSONObject headlineObject = headlinez.getJSONObject(i);
 					headline.setTitle(headlineObject.getString("content"));
 					headline.setLink(headlineObject.getString("href"));
-					//Log.d("ULTRONICS", headline.toString());
+					Log.d("ULTRONICS", headline.toString());
 				}
 				
 				
