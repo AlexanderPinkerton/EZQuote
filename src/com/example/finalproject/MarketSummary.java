@@ -19,7 +19,13 @@ public class MarketSummary extends Activity {
 		setContentView(R.layout.activity_main);
 		
 		if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction().add(R.id.container, new StockListFragment()).commit();
+			getFragmentManager()
+			.beginTransaction()
+			.add(R.id.container, new StockListFragment())
+			.add(R.id.newscontainer, new StockListFragment())
+			.add(R.id.searchcontainer, new SearchFragment())
+			.commit();
+			
 		}
 		
 		//Quote Search
