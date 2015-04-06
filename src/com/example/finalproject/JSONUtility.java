@@ -78,9 +78,11 @@ public class JSONUtility {
 				JSONArray headlinez = results.getJSONArray("a");
 				
 				for(int i=0;i<headlinez.length();i++){
+					headline = new Headline();
 					JSONObject headlineObject = headlinez.getJSONObject(i);
 					headline.setTitle(headlineObject.getString("content"));
 					headline.setLink(headlineObject.getString("href"));
+					headlines.add(headline);
 					Log.d("ULTRONICS", headline.toString());
 				}
 				
@@ -90,6 +92,7 @@ public class JSONUtility {
 				JSONObject headlineObject = results.getJSONObject("a");
 				headline.setTitle(headlineObject.getString("content"));
 				headline.setLink(headlineObject.getString("href"));
+				headlines.add(headline);
 				//Log.d("ULTRONICS", headline.toString());
 			}
 			

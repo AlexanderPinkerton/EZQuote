@@ -56,7 +56,7 @@ public final class R {
     }
     public static final class id {
         public static final int LinearLayout1=0x7f090000;
-        public static final int action_settings=0x7f090013;
+        public static final int action_settings=0x7f090014;
         public static final int b_search=0x7f090012;
         public static final int buttonCancel=0x7f09000d;
         public static final int buttonCreateNewAccount=0x7f090006;
@@ -69,7 +69,8 @@ public final class R {
         public static final int editTextPasswordConfirm=0x7f09000b;
         public static final int editTextUserName=0x7f09000a;
         public static final int imageView1=0x7f090002;
-        public static final int lv_stock=0x7f09000f;
+        public static final int lv_news=0x7f09000f;
+        public static final int lv_stock=0x7f090013;
         public static final int newscontainer=0x7f090008;
         public static final int searchbar=0x7f090010;
         public static final int searchcontainer=0x7f090009;

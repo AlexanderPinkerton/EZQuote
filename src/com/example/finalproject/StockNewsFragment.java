@@ -9,8 +9,6 @@ import java.util.ArrayList;
 
 import org.json.JSONException;
 
-import com.example.finalproject.StockNewsFragment.NewsDelegate;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.AsyncTask;
@@ -19,27 +17,32 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
-public class StockListFragment extends Fragment{
+public class StockNewsFragment extends Fragment{
+	
+	private NewsDelegate mListener;
+	ArrayList<Headline> newsItems;
+	ListView newsLister;
 
-	private StockDelegate mListener;
 	
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
 		super.onAttach(activity);
-		mListener = (StockDelegate) activity;
+		mListener = (NewsDelegate) activity;
 	}
 	
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 		
-		TextView title = (TextView) getActivity().findViewById(R.id.tv_listtitle);
-		title.setText("Market Summary");
+		newsLister = (ListView) getView().findViewById(R.id.lv_news);
+		updateNewsList();
 		
 	}
 
@@ -47,24 +50,29 @@ public class StockListFragment extends Fragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		View rootView = inflater.inflate(R.layout.fragment_stocklist, container,false);
+		View rootView = inflater.inflate(R.layout.fragment_newslist, container,false);
 		return rootView;
 	}
-
 	
-	public void updateSecurities(ArrayList<Security> stocks){
-		new JSONQuoteAsyncTask().execute("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22GOOG%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=");	
+	
+	public void updateNewsList(){
+		//newsItems = news;
+		new JSONNewsAsyncTask().execute("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D'http%3A%2F%2Ffinance.yahoo.com%2Fq%3Fs%3DGOOG'%20and%20xpath%3D'%2F%2Fdiv%5B%40id%3D%22yfi_headlines%22%5D%2Fdiv%5B2%5D%2Ful%2Fli%2Fa'&format=json&diagnostics=true&callback=");
+	}
+	
+	
+	public void test(){
+		newsLister.invalidateViews();
 	}
 	
 	
 	
 	
 	
-	
-	public class JSONQuoteAsyncTask extends AsyncTask<String, Void, ArrayList<Security>>{
+	public class JSONNewsAsyncTask extends AsyncTask<String, Void, ArrayList<Headline>>{
 
 		@Override
-		protected ArrayList<Security> doInBackground(String... params) {
+		protected ArrayList<Headline> doInBackground(String... params) {
 			// TODO Auto-generated method stub
 			try {
 			URL url = new URL(params[0]);
@@ -84,7 +92,7 @@ public class StockListFragment extends Fragment{
 					line = reader.readLine();
 				}
 				
-				return JSONUtility.StockJSONParser.parseStocks(sb.toString());
+				return JSONUtility.StockJSONParser.parseNews(sb.toString());
 				
 			}
 			
@@ -107,13 +115,19 @@ public class StockListFragment extends Fragment{
 		}
 
 		@Override
-		protected void onPostExecute(ArrayList<Security> result) {
+		protected void onPostExecute(ArrayList<Headline> result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
 			
 			if(result != null){
-				Log.d("DEMO", result.toString());
+				Log.d("ADLKHASDJHASDKHASD", result.size()+"");
+				newsItems = result;
+				ArrayAdapter adapter = new ArrayAdapter<Headline>(getActivity(), android.R.layout.simple_list_item_1, newsItems);
+				adapter.setNotifyOnChange(true);
+				newsLister.setAdapter(adapter);	
 			}
+			
+			
 			
 		}
 		
@@ -129,11 +143,16 @@ public class StockListFragment extends Fragment{
 	
 	
 	
-	public interface StockDelegate{
+	
+	
+	
+	
+	public interface NewsDelegate{
 		
-		public void updateStocks();
+		public void updateNews();
 		
 	}
+
 	
 	
 }

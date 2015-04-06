@@ -42,7 +42,7 @@ public class Headline {
 
 	@Override
 	public String toString() {
-		return "NewsHeadline [title=" + title + ", link=" + link + "]";
+		return title;
 	}
 	
 	
