@@ -4,24 +4,23 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <TextView
+<!--     <TextView
         android:id="@+id/tv_listtitle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="10"
-        android:background="@drawable/shape_blackground_dark"
+        android:layout_weight="1"   
         android:gravity="center"
         android:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/blue_ezquote" />
+        android:textColor="@color/blue_ezquote" /> -->
 
-    <ListView
+     <com.baoyz.swipemenulistview.SwipeMenuListView
         android:id="@+id/lv_stock"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@drawable/shape_blackground_dark" >
+        android:background="@drawable/shape_blackground_dark" />
 
-    </ListView>
+   
 
 </LinearLayout>

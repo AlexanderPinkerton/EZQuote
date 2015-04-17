@@ -19,8 +19,6 @@ import android.widget.Toast;
  */
 
 
-
-
 public class LoginActivity extends Activity implements OnClickListener{
 
 	EditText email, pass;
@@ -40,12 +38,13 @@ public class LoginActivity extends Activity implements OnClickListener{
         b = (Button)findViewById(R.id.buttonLogin);
         b.setOnClickListener(this);
         
-        /*
+        
         if (ParseUser.getCurrentUser() != null){
-        	Intent I = new Intent(LoginActivity.this, LoginActivity.class);
+        	Intent I = new Intent(LoginActivity.this, MarketSummaryActivity.class);
 			startActivity(I);
+			finish();
         }
-        */
+        
   
     }
 
@@ -59,7 +58,7 @@ public class LoginActivity extends Activity implements OnClickListener{
 		switch (v.getId()) {
 		case R.id.buttonCreateNewAccount:
 			
-			Intent i = new Intent(this, SignUp.class);
+			Intent i = new Intent(this, SignUpActivity.class);
 			startActivity(i);
 			
 			
@@ -80,9 +79,10 @@ public class LoginActivity extends Activity implements OnClickListener{
 						// TODO Auto-generated method stub
 						if (user != null) {
 						    // Hooray! The user is logged in.
-							Intent I = new Intent(LoginActivity.this, MarketSummary.class);
+							Intent I = new Intent(LoginActivity.this, MarketSummaryActivity.class);
 							//I.putExtra(name, value)
 							startActivity(I);
+							finish();
 						    } else {
 						      // Signup failed. Look at the ParseException to see what happened.
 						    	Toast.makeText(LoginActivity.this, "Login Failed.", Toast.LENGTH_SHORT).show();

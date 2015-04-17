@@ -1,24 +1,15 @@
 package com.example.finalproject;
 
-import java.util.ArrayList;
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.example.finalproject.StockListFragment.StockDelegate;
 import com.example.finalproject.StockNewsFragment.NewsDelegate;
+import com.parse.ParseUser;
 
-import android.app.Activity;
-import android.app.ActionBar;
-import android.app.Fragment;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.os.Build;
-
-public class MarketSummary extends Activity implements NewsDelegate, StockDelegate{
+public class MarketSummaryActivity extends Activity implements NewsDelegate, StockDelegate{
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +64,9 @@ public class MarketSummary extends Activity implements NewsDelegate, StockDelega
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.logout) {
+			ParseUser.logOut();
+			finish();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -87,8 +80,10 @@ public class MarketSummary extends Activity implements NewsDelegate, StockDelega
 
 
 	@Override
-	public void updateStocks() {
-		// TODO Auto-generated method stub
+	public void updateStocks(String stockSymbol) {
+		StockNewsFragment snf = (StockNewsFragment) getFragmentManager().findFragmentByTag("newslist");
+		
+		snf.refresh(stockSymbol);
 		
 	}
 
@@ -100,7 +95,7 @@ public class MarketSummary extends Activity implements NewsDelegate, StockDelega
 
 	@Override
 	public void updateNews() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 	

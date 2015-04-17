@@ -11,22 +11,25 @@ import org.json.JSONException;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 public class StockNewsFragment extends Fragment{
 	
 	private NewsDelegate mListener;
 	ArrayList<Headline> newsItems;
-	ListView newsLister;
-
+	ListView newsListerLV;
+	ArrayAdapter<Headline> adapter;
 	
 	@Override
 	public void onAttach(Activity activity) {
@@ -41,7 +44,23 @@ public class StockNewsFragment extends Fragment{
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 		
-		newsLister = (ListView) getView().findViewById(R.id.lv_news);
+		newsListerLV = (ListView) getView().findViewById(R.id.lv_news);
+		
+		newsListerLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					
+					String url = newsItems.get(position).getLink();
+					Intent i = new Intent(Intent.ACTION_VIEW);
+					i.setData(Uri.parse(url));
+					startActivity(i);
+					
+				}
+			});
+		 
+		
 		updateNewsList();
 		
 	}
@@ -62,10 +81,18 @@ public class StockNewsFragment extends Fragment{
 	
 	
 	public void test(){
-		newsLister.invalidateViews();
+		newsListerLV.invalidateViews();
 	}
 	
 	
+	public void refresh(String stockSymbol){
+		
+		Log.d("gotit",stockSymbol);
+		//Toast.makeText(getActivity(), stockSymbol, 3000).show();
+		
+			new JSONNewsAsyncTask().execute("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D'http%3A%2F%2Ffinance.yahoo.com%2Fq%3Fs%3D"+ stockSymbol +"'%20and%20xpath%3D'%2F%2Fdiv%5B%40id%3D%22yfi_headlines%22%5D%2Fdiv%5B2%5D%2Ful%2Fli%2Fa'&format=json&diagnostics=true&callback=");
+		
+	}
 	
 	
 	
@@ -120,11 +147,11 @@ public class StockNewsFragment extends Fragment{
 			super.onPostExecute(result);
 			
 			if(result != null){
-				Log.d("ADLKHASDJHASDKHASD", result.size()+"");
+				Log.d("NEWS", result.size()+"");
 				newsItems = result;
-				ArrayAdapter adapter = new ArrayAdapter<Headline>(getActivity(), android.R.layout.simple_list_item_1, newsItems);
+				adapter = new StockNewsAdapter(getActivity(), R.layout.news_listview, newsItems);
 				adapter.setNotifyOnChange(true);
-				newsLister.setAdapter(adapter);	
+				newsListerLV.setAdapter(adapter);	
 			}
 			
 			
@@ -135,17 +162,7 @@ public class StockNewsFragment extends Fragment{
 
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	public interface NewsDelegate{
 		

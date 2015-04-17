@@ -21,7 +21,7 @@ public class JSONUtility {
 		
 		static public ArrayList<Security> parseStocks(String in) throws JSONException, IOException{	
 			ArrayList<Security> stocks = new ArrayList<Security>();			
-			Security stock = new Security();
+			Security stock;
 
 
 			
@@ -37,10 +37,32 @@ public class JSONUtility {
 				
 				for(int i=0;i<quotes.length();i++){
 					JSONObject stockObject = quotes.getJSONObject(i);
+					stock = new Security();
 					stock.setCompanyName(stockObject.getString("Name"));
 					stock.setSymbol(stockObject.getString("symbol"));
+					if(stockObject.getString("Ask").equals("null")){
+						stock.setCurrentPrice(0.0);
+					}else{
 					stock.setCurrentPrice(stockObject.getDouble("Ask"));
+					}
 					stock.setChange(stockObject.getDouble("Change"));
+					
+					if(!stockObject.getString("MarketCapitalization").equals("null")){
+						stock.setMarketCapitalization(stockObject.getString("MarketCapitalization"));
+					}else{
+						stock.setMarketCapitalization("--");
+					}
+					
+					String chgPercentage = stockObject.getString("Change_PercentChange");
+					
+					if(("" + chgPercentage.charAt(0)).equals("+")){
+						chgPercentage = stockObject.getString("Change_PercentChange").split("-")[1];
+					}else{
+						
+						chgPercentage = chgPercentage.substring(chgPercentage.length()-6,chgPercentage.length());						
+						
+					}
+					stock.setChangePercentage(chgPercentage);
 					stocks.add(stock);
 				}
 				
@@ -48,6 +70,7 @@ public class JSONUtility {
 			}else if (count == 1){
 				
 				JSONObject quote = results.getJSONObject("quote");
+				stock = new Security();
 				stock.setCompanyName(quote.getString("Name"));
 				stock.setSymbol(quote.getString("symbol"));
 				stock.setCurrentPrice(quote.getDouble("Ask"));
@@ -82,6 +105,11 @@ public class JSONUtility {
 					JSONObject headlineObject = headlinez.getJSONObject(i);
 					headline.setTitle(headlineObject.getString("content"));
 					headline.setLink(headlineObject.getString("href"));
+					
+					String sourceBy = headlineObject.getString("data-ylk");
+					sourceBy = sourceBy.substring(3,sourceBy.length()).split(";")[0];
+					headline.setSourceBy(sourceBy);
+					
 					headlines.add(headline);
 					Log.d("ULTRONICS", headline.toString());
 				}

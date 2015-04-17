@@ -3,7 +3,8 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.finalproject.MarketSummary"
+    android:background="@drawable/shape_blackground_dark"
+    tools:context="com.example.finalproject.MarketSummaryActivity"
     tools:ignore="MergeRootFrame" >
 
     <LinearLayout

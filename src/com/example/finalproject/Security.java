@@ -4,8 +4,27 @@ package com.example.finalproject;
 
 public class Security {
 	
-	String companyName, symbol;
+	String companyName, symbol,marketCapitalization,changePercentage;
+	public String getMarketCapitalization() {
+		return marketCapitalization;
+	}
+
+	public void setMarketCapitalization(String marketCapitalization) {
+		this.marketCapitalization = marketCapitalization;
+	}
+
+	public String getChangePercentage() {
+		return changePercentage;
+	}
+
+	public void setChangePercentage(String changePercentage) {
+		this.changePercentage = changePercentage;
+	}
+
+
+
 	double askPrice, openPrice, closePrice, change, volume;
+	
 	int id;
 	
 	

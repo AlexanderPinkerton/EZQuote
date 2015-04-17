@@ -2,17 +2,29 @@ package com.example.finalproject;
 
 public class Headline {
 	
-	String title, link, source;
+	String title, link, source,sourceBy;
 	
-	public Headline(){
-		
-	}
-
+	
 	public Headline(String title, String link) {
 		super();
 		this.title = title;
 		this.link = link;
 	}
+	
+	public Headline(){
+		
+	}
+	
+	public String getSourceBy() {
+		return sourceBy;
+	}
+
+	public void setSourceBy(String sourceBy) {
+		this.sourceBy = sourceBy;
+	}
+
+
+	
 
 	public String getTitle() {
 		return title;
