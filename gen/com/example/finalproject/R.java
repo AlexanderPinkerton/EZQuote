@@ -58,6 +58,7 @@ public final class R {
     }
     public static final class id {
         public static final int LinearLayout1=0x7f090000;
+        public static final int action_search=0x7f090019;
         public static final int b_search=0x7f090011;
         public static final int buttonCancel=0x7f09000d;
         public static final int buttonCreateNewAccount=0x7f090006;
@@ -65,6 +66,7 @@ public final class R {
         public static final int buttonSignup=0x7f09000c;
         public static final int changeButton=0x7f090017;
         public static final int container=0x7f090007;
+        public static final int detailcontainer=0x7f090008;
         public static final int editText1=0x7f090010;
         public static final int editTextEmail=0x7f090003;
         public static final int editTextPassword=0x7f090004;
@@ -75,13 +77,12 @@ public final class R {
         public static final int lv_news=0x7f09000e;
         public static final int lv_stock=0x7f090012;
         public static final int newsContentTv=0x7f090013;
-        public static final int newscontainer=0x7f090008;
+        public static final int newscontainer=0x7f090009;
         public static final int priceTv=0x7f090016;
         public static final int searchbar=0x7f09000f;
-        public static final int searchcontainer=0x7f090009;
         public static final int sourceByTv=0x7f090014;
         public static final int stockNameTv=0x7f090015;
-        public static final int textView1=0x7f090001;
+        public static final int tv_quoteTitle=0x7f090001;
     }
     public static final class layout {
         public static final int activity_login=0x7f030000;
@@ -89,13 +90,15 @@ public final class R {
         public static final int activity_sign_up=0x7f030002;
         public static final int fragment_main=0x7f030003;
         public static final int fragment_newslist=0x7f030004;
-        public static final int fragment_searchbar=0x7f030005;
-        public static final int fragment_stocklist=0x7f030006;
-        public static final int news_listview=0x7f030007;
-        public static final int stock_listview=0x7f030008;
+        public static final int fragment_quoteview=0x7f030005;
+        public static final int fragment_searchbar=0x7f030006;
+        public static final int fragment_stocklist=0x7f030007;
+        public static final int news_listview=0x7f030008;
+        public static final int stock_listview=0x7f030009;
     }
     public static final class menu {
         public static final int main=0x7f080000;
+        public static final int menuquotesearch=0x7f080001;
     }
     public static final class string {
         public static final int action_add=0x7f060003;

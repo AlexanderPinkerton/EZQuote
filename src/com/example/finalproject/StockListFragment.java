@@ -67,7 +67,7 @@ public class StockListFragment extends Fragment{
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				
-				mListener.updateStocks(stockListAdapter.getItem(position).getSymbol());
+				mListener.securityClicked(stockListAdapter.getItem(position).getSymbol());
 				
 			}
 		});
@@ -274,7 +274,7 @@ public class StockListFragment extends Fragment{
 	
 	public interface StockDelegate{
 		
-		public void updateStocks(String stockSymbol);
+		public void securityClicked(String stockSymbol);
 		
 	}
 	
