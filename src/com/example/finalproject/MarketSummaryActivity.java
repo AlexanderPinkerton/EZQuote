@@ -1,11 +1,21 @@
 package com.example.finalproject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+
+import org.json.JSONException;
 
 import android.app.Activity;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -17,13 +27,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.finalproject.QuoteViewFragment.QuoteViewDelegate;
+import com.example.finalproject.StockListFragment.JSONQuoteAsyncTask;
 import com.example.finalproject.StockListFragment.StockDelegate;
 import com.example.finalproject.StockNewsFragment.NewsDelegate;
 import com.parse.ParseUser;
 
-public class MarketSummaryActivity extends Activity implements NewsDelegate, StockDelegate, QuoteViewDelegate, SearchView.OnQueryTextListener{
+public class MarketSummaryActivity extends Activity implements NewsDelegate, StockDelegate, 
+													QuoteViewDelegate, SearchView.OnQueryTextListener{
 
 	private SearchView mSearchView;
+	private long lastSearchTime=0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +46,7 @@ public class MarketSummaryActivity extends Activity implements NewsDelegate, Sto
 		if (savedInstanceState == null) {
 			getFragmentManager()
 			.beginTransaction()
-			.add(R.id.container, new StockListFragment(),"stocklist")
+			.add(R.id.stockscontainer, new StockListFragment(),"stocklist")
 			.add(R.id.newscontainer, new StockNewsFragment(),"newslist")
 			.commit();
 			
@@ -94,13 +107,12 @@ public class MarketSummaryActivity extends Activity implements NewsDelegate, Sto
 	
 
 
-	public void getQuote(){
-		
+	public void getQuote(Security stockObj){
 		getFragmentManager()
 		.beginTransaction()
 		.remove(getFragmentManager().findFragmentByTag("stocklist"))
 		.remove(getFragmentManager().findFragmentByTag("newslist"))
-		.add(R.id.detailcontainer, new QuoteViewFragment(), "quoteview")
+		.add(R.id.detailcontainer, new QuoteViewFragment(stockObj), "quoteview")
 		.addToBackStack(null)
 		.commit();
 		Log.d("ASLKJASDLKJSADLJ", "THIS HAPPENED");
@@ -110,8 +122,8 @@ public class MarketSummaryActivity extends Activity implements NewsDelegate, Sto
 
 
 	@Override
-	public void securityClicked(String stockSymbol) {
-		getQuote();	
+	public void securityClicked(Security stockObj) {
+		getQuote(stockObj);	
 	}
 
 
@@ -145,7 +157,7 @@ public class MarketSummaryActivity extends Activity implements NewsDelegate, Sto
 	                    | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 	        }
 
-	        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+	       /* SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 	        if (searchManager != null) {
 	            List<SearchableInfo> searchables = searchManager.getSearchablesInGlobalSearch();
 
@@ -158,7 +170,8 @@ public class MarketSummaryActivity extends Activity implements NewsDelegate, Sto
 	            }
 	            mSearchView.setSearchableInfo(info);
 	        }
-
+*/
+	        
 	        mSearchView.setOnQueryTextListener(this);
 	    }
 
@@ -168,13 +181,22 @@ public class MarketSummaryActivity extends Activity implements NewsDelegate, Sto
 	    }
 
 	    public boolean onQueryTextSubmit(String stockSymbol) {
-
-	        StockNewsFragment snf = (StockNewsFragment) getFragmentManager().findFragmentByTag("newslist");
+	    	
+	    	//This should fix the bug. Only one search per second and a half.
+	    	long searchTime = System.currentTimeMillis();
+	    	if(searchTime > lastSearchTime + 1500){
+		    	new JSONQuoteSearchAsyncTask().execute("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22"+ stockSymbol +"%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=");	
+	    		lastSearchTime = searchTime;
+	    	}
+	    	
+	    	
+	    	
+	        /*StockNewsFragment snf = (StockNewsFragment) getFragmentManager().findFragmentByTag("newslist");
 			
-			snf.refresh(stockSymbol);
+			snf.refresh(stockSymbol);*/
 	        
 	        
-	        return false;
+	        return true;
 	    }
 
 	    public boolean onClose() {
@@ -191,6 +213,84 @@ public class MarketSummaryActivity extends Activity implements NewsDelegate, Sto
 
 
 
+
+		@Override
+		public void passSymbolToNews(String stockSymbol) {
+			 StockNewsFragment snf = (StockNewsFragment) getFragmentManager().findFragmentByTag("newslist");
+				
+				snf.refresh(stockSymbol);
+			
+		}
+
+
+
+
+
+		public class JSONQuoteSearchAsyncTask extends AsyncTask<String, Void, ArrayList<Security>>{
+
+			@Override
+			protected ArrayList<Security> doInBackground(String... params) {
+
+				try {
+				URL url = new URL(params[0]);
+				HttpURLConnection con;	
+				con = (HttpURLConnection) url.openConnection();
+				con.setRequestMethod("GET");
+				con.connect();
+				int statusCode = con.getResponseCode();
+				if(statusCode == HttpURLConnection.HTTP_OK){
+					
+					BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+					StringBuilder sb = new StringBuilder();
+					String line = reader.readLine();
+					
+					while(line != null){
+						sb.append(line);
+						line = reader.readLine();
+					}
+					
+					return JSONUtility.StockJSONParser.parseStocks(sb.toString());
+					
+				}
+				
+				} catch (IOException e) {
+			
+					e.printStackTrace();
+				} catch (JSONException e) {
+					
+					e.printStackTrace();
+				}
+				
+				
+				return null;
+			}
+
+			@Override
+			protected void onPreExecute() {
+				// TODO Auto-generated method stub
+				super.onPreExecute();
+			}
+
+			@Override
+			protected void onPostExecute(ArrayList<Security> result) {
+				// TODO Auto-generated method stub
+				super.onPostExecute(result);
+				
+				if(result != null){
+					getQuote(result.get(0));
+					Log.d("DEMO", result.toString());
+				}
+				
+			
+				
+				}
+				
+			}
+			
+			
+
+		
+		
 
 	
 

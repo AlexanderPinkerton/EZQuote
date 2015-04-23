@@ -40,12 +40,18 @@ public class JSONUtility {
 					stock = new Security();
 					stock.setCompanyName(stockObject.getString("Name"));
 					stock.setSymbol(stockObject.getString("symbol"));
+					
 					if(stockObject.getString("Ask").equals("null")){
-						stock.setCurrentPrice(0.0);
+						stock.setAskPrice("--");
 					}else{
-					stock.setCurrentPrice(stockObject.getDouble("Ask"));
+						stock.setAskPrice(stockObject.getString("Ask"));
 					}
-					stock.setChange(stockObject.getDouble("Change"));
+					
+					if(stockObject.getString("Change").equals("null")){
+						stock.setChange("--");
+					}else{
+						stock.setChange(stockObject.getString("Change"));
+					}
 					
 					if(!stockObject.getString("MarketCapitalization").equals("null")){
 						stock.setMarketCapitalization(stockObject.getString("MarketCapitalization"));
@@ -53,16 +59,33 @@ public class JSONUtility {
 						stock.setMarketCapitalization("--");
 					}
 					
-					String chgPercentage = stockObject.getString("Change_PercentChange");
+					String chgPercentage = stockObject.getString("PercentChange");
 					
-					if(("" + chgPercentage.charAt(0)).equals("+")){
+				/*	if(("" + chgPercentage.charAt(0)).equals("+")){
 						chgPercentage = stockObject.getString("Change_PercentChange").split("-")[1];
 					}else{
 						
 						chgPercentage = chgPercentage.substring(chgPercentage.length()-6,chgPercentage.length());						
 						
-					}
+					}*/
 					stock.setChangePercentage(chgPercentage);
+					
+					stock.setDaysLow(stockObject.getString("DaysLow"));
+					stock.setDaysHigh(stockObject.getString("DaysHigh"));
+					stock.setYearLow(stockObject.getString("YearLow"));
+					stock.setYearHigh(stockObject.getString("YearHigh"));
+					stock.setVolume(stockObject.getString("Volume"));
+					stock.setPeRatio(stockObject.getString("PERatio"));
+					if(stockObject.getString("DividendYield").equals("null")){
+						stock.setYield("--");
+					}else{
+						stock.setYield(stockObject.getString("DividendYield"));
+					}
+					
+					stock.setAvgVolume(stockObject.getString("AverageDailyVolume"));
+					
+					
+					
 					stocks.add(stock);
 				}
 				
@@ -73,8 +96,51 @@ public class JSONUtility {
 				stock = new Security();
 				stock.setCompanyName(quote.getString("Name"));
 				stock.setSymbol(quote.getString("symbol"));
-				stock.setCurrentPrice(quote.getDouble("Ask"));
-				stock.setChange(quote.getDouble("Change"));
+				
+				if(quote.getString("Ask").equals("null")){
+					stock.setAskPrice("--");
+				}else{
+					stock.setAskPrice(quote.getString("Ask"));
+				}
+				
+				if(quote.getString("Change").equals("null")){
+					stock.setChange("--");
+				}else{
+					stock.setChange(quote.getString("Change"));
+				}
+				
+				if(!quote.getString("MarketCapitalization").equals("null")){
+					stock.setMarketCapitalization(quote.getString("MarketCapitalization"));
+				}else{
+					stock.setMarketCapitalization("--");
+				}
+				
+				String chgPercentage = quote.getString("PercentChange");
+				
+			/*	if(("" + chgPercentage.charAt(0)).equals("+")){
+					chgPercentage = stockObject.getString("Change_PercentChange").split("-")[1];
+				}else{
+					
+					chgPercentage = chgPercentage.substring(chgPercentage.length()-6,chgPercentage.length());						
+					
+				}*/
+				stock.setChangePercentage(chgPercentage);
+				
+				stock.setDaysLow(quote.getString("DaysLow"));
+				stock.setDaysHigh(quote.getString("DaysHigh"));
+				stock.setYearLow(quote.getString("YearLow"));
+				stock.setYearHigh(quote.getString("YearHigh"));
+				stock.setVolume(quote.getString("Volume"));
+				stock.setPeRatio(quote.getString("PERatio"));
+				if(quote.getString("DividendYield").equals("null")){
+					stock.setYield("--");
+				}else{
+					stock.setYield(quote.getString("DividendYield"));
+				}
+				
+				stock.setAvgVolume(quote.getString("AverageDailyVolume"));
+				
+				
 				Log.d("ULTRONICS", stock.toString());
 				stocks.add(stock);
 			}

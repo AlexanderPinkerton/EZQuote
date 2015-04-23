@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONException;
 
@@ -21,9 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
@@ -31,6 +30,11 @@ import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.baoyz.swipemenulistview.SwipeMenuListView.OnMenuItemClickListener;
 import com.baoyz.swipemenulistview.SwipeMenuListView.OnSwipeListener;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 public class StockListFragment extends Fragment{
 
@@ -38,6 +42,7 @@ public class StockListFragment extends Fragment{
 	SwipeMenuListView lv;
 	ArrayAdapter<Security> stockListAdapter;
 	ArrayList<Security> securityList;
+	String favStocks = "";
 	
 	@Override
 	public void onAttach(Activity activity) {
@@ -60,14 +65,15 @@ public class StockListFragment extends Fragment{
 		
 		
 		lv = (SwipeMenuListView) getActivity().findViewById(R.id.lv_stock);
-		
+		lv.setChoiceMode(SwipeMenuListView.CHOICE_MODE_SINGLE);
 		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				lv.setItemChecked(position, true);
 				
-				mListener.securityClicked(stockListAdapter.getItem(position).getSymbol());
+				mListener.passSymbolToNews(stockListAdapter.getItem(position).getSymbol());
 				
 			}
 		});
@@ -78,11 +84,11 @@ public class StockListFragment extends Fragment{
 					@Override
 					public void create(SwipeMenu menu) {
 						// create "open" item
-						/*SwipeMenuItem openItem = new SwipeMenuItem(
+						SwipeMenuItem openItem = new SwipeMenuItem(
 								getActivity());
 						// set item background
-						openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
-								0xCE)));
+						openItem.setBackground(new ColorDrawable(Color.rgb(128, 128,
+								128)));
 						// set item width
 						openItem.setWidth(dp2px(90));
 						// set item title
@@ -92,16 +98,16 @@ public class StockListFragment extends Fragment{
 						// set item title font color
 						openItem.setTitleColor(Color.WHITE);
 						// add to menu
-						menu.addMenuItem(openItem);*/
+						menu.addMenuItem(openItem);
 
 						// create "delete" item
 						SwipeMenuItem deleteItem = new SwipeMenuItem(
 								getActivity());
 						// set item background
-						deleteItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
-								0xCE)));
-						/*deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
-								0x3F, 0x25)));*/
+						/*deleteItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
+								0xCE)));*/
+						deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
+								0x3F, 0x25)));
 						// set item width
 						deleteItem.setWidth(dp2px(90));
 						// set a icon
@@ -122,6 +128,7 @@ public class StockListFragment extends Fragment{
 						case 0:
 							// open
 							//open(item);
+							mListener.securityClicked(stockListAdapter.getItem(position));
 							break;
 						case 1:
 							// delete
@@ -152,7 +159,7 @@ public class StockListFragment extends Fragment{
 //				listView.setCloseInterpolator(new BounceInterpolator());
 				
 				// test item long click
-				lv.setOnItemLongClickListener(new OnItemLongClickListener() {
+			/*	lv.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 					@Override
 					public boolean onItemLongClick(AdapterView<?> parent, View view,
@@ -161,10 +168,34 @@ public class StockListFragment extends Fragment{
 						return false;
 					}
 				});
+		*/
+		favStocks = "";
+		ParseQuery<ParseObject> favQuery = ParseQuery.getQuery("Favorites");
+		favQuery.whereEqualTo("UserName", ParseUser.getCurrentUser().getUsername());
+		favQuery.findInBackground(new FindCallback<ParseObject>() {
+			
+			@Override
+			public void done(List<ParseObject> objects, ParseException e) {
+				
+				if(e == null && objects!= null){
+					
+					for(ParseObject pObj : objects){
+						favStocks+= pObj.getString("StockName")+",";
+					}
+					if(favStocks.length() > 0){
+						favStocks =  favStocks.substring(0,favStocks.length()-1);
+						updateSecurities(favStocks);
+					}
+					
+					
+					
+				}else{
+					Log.d("Error in Fav", e.getLocalizedMessage());
+				}
+				
+			}
+		});	
 		
-		
-		
-		updateSecurities(a);
 	}
 
 	@Override
@@ -176,10 +207,10 @@ public class StockListFragment extends Fragment{
 	}
 
 	
-	public void updateSecurities(ArrayList<Security> stocks){
-		new JSONQuoteAsyncTask().execute("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22GOOG,YHOO,ORCL,BCX,MSFT,MSG,QCOM,QQEW%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=");	
+	public void updateSecurities(String stocks){
+		new JSONQuoteAsyncTask().execute("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22"+ stocks +"%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=");	
+		//new JSONQuoteAsyncTask().execute("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22GOOG%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=");
 	}
-	
 	
 	
 	
@@ -189,7 +220,7 @@ public class StockListFragment extends Fragment{
 
 		@Override
 		protected ArrayList<Security> doInBackground(String... params) {
-			// TODO Auto-generated method stub
+
 			try {
 			URL url = new URL(params[0]);
 			HttpURLConnection con;	
@@ -274,7 +305,8 @@ public class StockListFragment extends Fragment{
 	
 	public interface StockDelegate{
 		
-		public void securityClicked(String stockSymbol);
+		public void securityClicked(Security stockObj);
+		public void passSymbolToNews(String stockSymbol);
 		
 	}
 	

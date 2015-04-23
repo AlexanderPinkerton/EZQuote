@@ -1,10 +1,31 @@
 package com.example.finalproject;
 
+import java.io.Serializable;
 
 
-public class Security {
+
+public class Security implements Serializable{
 	
 	String companyName, symbol,marketCapitalization,changePercentage;
+	String daysLow,daysHigh,yearLow,yearHigh,volume,peRatio,avgVolume,yield;
+	String askPrice,  change;
+
+
+public String getAvgVolume() {
+	return avgVolume;
+}
+
+public void setAvgVolume(String avgVolume) {
+	this.avgVolume = avgVolume;
+}
+
+public String getYield() {
+	return yield;
+}
+
+public void setYield(String yield) {
+	this.yield = yield;
+}
 	public String getMarketCapitalization() {
 		return marketCapitalization;
 	}
@@ -22,41 +43,19 @@ public class Security {
 	}
 
 
-
-	double askPrice, openPrice, closePrice, change, volume;
-	
-	int id;
-	
-	
-	public Security(){};
-	
-	public Security(String companyName, String symbol, float currentPrice,
-			float openPrice, float closePrice, float volume, int id) {
-		super();
-		this.companyName = companyName;
-		this.symbol = symbol;
-		this.askPrice = currentPrice;
-		this.openPrice = openPrice;
-		this.closePrice = closePrice;
-		this.volume = volume;
-		this.id = id;
-	}
-	
-	
-	
-	public double getAskPrice() {
+	public String getAskPrice() {
 		return askPrice;
 	}
 
-	public void setAskPrice(double askPrice) {
+	public void setAskPrice(String askPrice) {
 		this.askPrice = askPrice;
 	}
 
-	public double getChange() {
+	public String getChange() {
 		return change;
 	}
 
-	public void setChange(double change) {
+	public void setChange(String change) {
 		this.change = change;
 	}
 
@@ -72,43 +71,69 @@ public class Security {
 	public void setSymbol(String symbol) {
 		this.symbol = symbol;
 	}
-	public double getCurrentPrice() {
+/*	public double getCurrentPrice() {
 		return askPrice;
 	}
 	public void setCurrentPrice(double currentPrice) {
 		this.askPrice = currentPrice;
-	}
-	public double getOpenPrice() {
-		return openPrice;
-	}
-	public void setOpenPrice(double openPrice) {
-		this.openPrice = openPrice;
-	}
-	public double getClosePrice() {
-		return closePrice;
-	}
-	public void setClosePrice(double closePrice) {
-		this.closePrice = closePrice;
-	}
-	public double getVolume() {
-		return volume;
-	}
-	public void setVolume(double volume) {
-		this.volume = volume;
-	}
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-
+	}*/
+	
+	
 	
 	
 	@Override
 	public String toString() {
 		return "Security [companyName=" + companyName + ", symbol=" + symbol
 				+ ", askPrice=" + askPrice + ", change=" + change + "]";
+	}
+
+
+	public String getDaysLow() {
+		return daysLow;
+	}
+
+	public void setDaysLow(String daysLow) {
+		this.daysLow = daysLow;
+	}
+
+	public String getDaysHigh() {
+		return daysHigh;
+	}
+
+	public void setDaysHigh(String daysHigh) {
+		this.daysHigh = daysHigh;
+	}
+
+	public String getYearLow() {
+		return yearLow;
+	}
+
+	public void setYearLow(String yearLow) {
+		this.yearLow = yearLow;
+	}
+
+	public String getYearHigh() {
+		return yearHigh;
+	}
+
+	public void setYearHigh(String yearHigh) {
+		this.yearHigh = yearHigh;
+	}
+
+	public String getVolume() {
+		return volume;
+	}
+
+	public void setVolume(String volume) {
+		this.volume = volume;
+	}
+
+	public String getPeRatio() {
+		return peRatio;
+	}
+
+	public void setPeRatio(String peRatio) {
+		this.peRatio = peRatio;
 	}
 
 	

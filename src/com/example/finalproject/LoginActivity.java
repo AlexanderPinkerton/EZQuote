@@ -7,6 +7,7 @@ import com.parse.ParseUser;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -60,7 +61,7 @@ public class LoginActivity extends Activity implements OnClickListener{
 			
 			Intent i = new Intent(this, SignUpActivity.class);
 			startActivity(i);
-			
+			break;
 			
 		case R.id.buttonLogin:
 
@@ -77,7 +78,7 @@ public class LoginActivity extends Activity implements OnClickListener{
 					@Override
 					public void done(ParseUser user, ParseException e) {
 						// TODO Auto-generated method stub
-						if (user != null) {
+						if (user != null && e == null) {
 						    // Hooray! The user is logged in.
 							Intent I = new Intent(LoginActivity.this, MarketSummaryActivity.class);
 							//I.putExtra(name, value)
@@ -85,6 +86,7 @@ public class LoginActivity extends Activity implements OnClickListener{
 							finish();
 						    } else {
 						      // Signup failed. Look at the ParseException to see what happened.
+						    	Log.d("Loginerror", e.getLocalizedMessage());
 						    	Toast.makeText(LoginActivity.this, "Login Failed.", Toast.LENGTH_SHORT).show();
 						    }
 					}

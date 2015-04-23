@@ -62,6 +62,7 @@ public class SignUpActivity extends Activity implements OnClickListener{
 				
 				if(editTextPassword.getText().toString().equals(editTextPasswordConfirm.getText().toString())){
 					user.setUsername(editTextEmail.getText().toString());
+					user.setEmail(editTextEmail.getText().toString());
 					user.setPassword(editTextPassword.getText().toString());
 					user.put("name", editTextUserName.getText().toString());
 					

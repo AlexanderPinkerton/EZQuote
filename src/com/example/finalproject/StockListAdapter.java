@@ -81,7 +81,7 @@ public class StockListAdapter extends ArrayAdapter<Security> {
 
         // Bind the data efficiently with the holder.
         holder.stockNameTv.setText(listItem.getSymbol());
-        holder.priceTv.setText(listItem.getCurrentPrice()+"");
+        holder.priceTv.setText(listItem.getAskPrice()+"");
         
     	if(which.equals("Change")){
     		   holder.changeButton.setText(listItem.getChange()+"");
@@ -91,7 +91,7 @@ public class StockListAdapter extends ArrayAdapter<Security> {
 			   holder.changeButton.setText(listItem.getChangePercentage());
 		}
         
-        if(listItem.getChange() >= 0){
+        if(Double.parseDouble(listItem.getChange()) >= 0){
         	holder.changeButton.setBackgroundColor(Color.GREEN);
         }else{
         	holder.changeButton.setBackgroundColor(Color.RED);
