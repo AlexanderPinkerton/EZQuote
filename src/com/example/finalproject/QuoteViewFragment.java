@@ -10,8 +10,11 @@ import java.util.Calendar;
 import java.util.Collections;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,6 +45,7 @@ public class QuoteViewFragment extends Fragment implements OnClickListener{
 	String stockSymbol;
 	Security stockObj;
 	TextView openTv,mktCapTv,highTv,lowTv,wHighTv,wLowTv,volTv,avgVolTv,peTv,yieldTv,stockNameTv;
+	TextView oneMonth,threeMonth,sixMonth,oneYear,threeYear;
 	ImageView favIcon,notFavIcon;
 	
 	public QuoteViewFragment(Security stockObj){
@@ -66,7 +70,7 @@ public class QuoteViewFragment extends Fragment implements OnClickListener{
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 		chart = (LineChart) getView().findViewById(R.id.chart);
-		new getCsv().execute(stockSymbol);
+		new getCsv().execute(stockSymbol,"oneYear");
 		favIcon = (ImageView) getView().findViewById(R.id.favIcon);
 		notFavIcon = (ImageView) getView().findViewById(R.id.notFavIcon);
 		
@@ -109,8 +113,17 @@ public class QuoteViewFragment extends Fragment implements OnClickListener{
 		yieldTv = (TextView) getView().findViewById(R.id.yieldValTv);
 		stockNameTv = (TextView) getView().findViewById(R.id.stockNameTv);
 		
+		oneMonth = (TextView) getView().findViewById(R.id.oneMonth);
+		threeMonth = (TextView) getView().findViewById(R.id.threeMonth);
+		sixMonth = (TextView) getView().findViewById(R.id.sixMonth);
+		oneYear = (TextView) getView().findViewById(R.id.oneYear);
+		threeYear = (TextView) getView().findViewById(R.id.threeYear);
 		
-		
+		oneMonth.setOnClickListener(this);
+		threeMonth.setOnClickListener(this);
+		sixMonth.setOnClickListener(this);
+		oneYear.setOnClickListener(this);
+		threeYear.setOnClickListener(this);
 		
 		openTv.setText(stockObj.getAskPrice());
 		mktCapTv.setText(stockObj.getMarketCapitalization());
@@ -142,6 +155,77 @@ public class QuoteViewFragment extends Fragment implements OnClickListener{
 
 		case R.id.notFavIcon:
 			saveInFavorites();
+			break;
+			
+		case R.id.oneMonth:
+			//saveInFavorites();
+			oneMonth.setTypeface(oneMonth.getTypeface(),Typeface.BOLD);
+			oneMonth.setTextColor(Color.WHITE);
+			threeMonth.setTextColor(Color.GRAY);
+			sixMonth.setTextColor(Color.GRAY);
+			oneYear.setTextColor(Color.GRAY);
+			threeYear.setTextColor(Color.GRAY);
+			threeMonth.setTypeface(Typeface.SANS_SERIF);
+			sixMonth.setTypeface(Typeface.SANS_SERIF);
+			oneYear.setTypeface(Typeface.SANS_SERIF);
+			threeYear.setTypeface(Typeface.SANS_SERIF);
+			new getCsv().execute(stockSymbol,"oneMonth");
+			break;
+		case R.id.threeMonth:
+			//saveInFavorites();
+			threeMonth.setTypeface(threeMonth.getTypeface(),Typeface.BOLD);
+			threeMonth.setTextColor(Color.WHITE);
+			oneMonth.setTextColor(Color.GRAY);
+			sixMonth.setTextColor(Color.GRAY);
+			oneYear.setTextColor(Color.GRAY);
+			threeYear.setTextColor(Color.GRAY);
+			oneMonth.setTypeface(Typeface.SANS_SERIF);
+			sixMonth.setTypeface(Typeface.SANS_SERIF);
+			oneYear.setTypeface(Typeface.SANS_SERIF);
+			threeYear.setTypeface(Typeface.SANS_SERIF);
+			new getCsv().execute(stockSymbol,"threeMonth");
+			break;
+		case R.id.sixMonth:
+			//saveInFavorites();
+			sixMonth.setTypeface(sixMonth.getTypeface(),Typeface.BOLD);
+			sixMonth.setTextColor(Color.WHITE);
+			threeMonth.setTextColor(Color.GRAY);
+			oneMonth.setTextColor(Color.GRAY);
+			oneYear.setTextColor(Color.GRAY);
+			threeYear.setTextColor(Color.GRAY);
+			threeMonth.setTypeface(Typeface.SANS_SERIF);
+			oneMonth.setTypeface(Typeface.SANS_SERIF);
+			oneYear.setTypeface(Typeface.SANS_SERIF);
+			threeYear.setTypeface(Typeface.SANS_SERIF);
+			new getCsv().execute(stockSymbol,"sixMonth");
+			break;
+		case R.id.oneYear:
+			//saveInFavorites();
+			threeMonth.setTextColor(Color.GRAY);
+			sixMonth.setTextColor(Color.GRAY);
+			oneMonth.setTextColor(Color.GRAY);
+			threeYear.setTextColor(Color.GRAY);
+			oneYear.setTypeface(oneYear.getTypeface(),Typeface.BOLD);
+			oneYear.setTextColor(Color.WHITE);
+			threeMonth.setTypeface(Typeface.SANS_SERIF);
+			sixMonth.setTypeface(Typeface.SANS_SERIF);
+			oneMonth.setTypeface(Typeface.SANS_SERIF);
+			threeYear.setTypeface(Typeface.SANS_SERIF);
+			new getCsv().execute(stockSymbol,"oneYear");
+			break;
+		case R.id.threeYear:
+			//saveInFavorites();
+			threeMonth.setTextColor(Color.GRAY);
+			sixMonth.setTextColor(Color.GRAY);
+			oneYear.setTextColor(Color.GRAY);
+			oneMonth.setTextColor(Color.GRAY);
+			threeYear.setTypeface(threeYear.getTypeface(),Typeface.BOLD);
+			threeYear.setTextColor(Color.WHITE);
+			threeMonth.setTypeface(Typeface.SANS_SERIF);
+			sixMonth.setTypeface(Typeface.SANS_SERIF);
+			oneYear.setTypeface(Typeface.SANS_SERIF);
+			oneMonth.setTypeface(Typeface.SANS_SERIF);
+			new getCsv().execute(stockSymbol,"threeYear");
 			break;
 		}
 		
@@ -222,7 +306,7 @@ public class QuoteViewFragment extends Fragment implements OnClickListener{
 
 
 	class getCsv extends AsyncTask<String, Integer, LineData>{
-
+		ProgressDialog pd;
 		@Override
 		protected LineData doInBackground(String... params) {
 			// TODO Auto-generated method stub
@@ -237,23 +321,60 @@ public class QuoteViewFragment extends Fragment implements OnClickListener{
 		    
 		    
 		    String quoteCompany = params[0];//Company Stock Code!!!!
-		    
+		    String timePeriod = params[1];
 		    
 		    Calendar cal = Calendar.getInstance(); 
-			int year = cal.get(Calendar.YEAR);
-			int month = cal.get(Calendar.MONTH);
-			int day = cal.get(Calendar.DATE);
+			int presentYear = cal.get(Calendar.YEAR);
+			int presentMonth = cal.get(Calendar.MONTH);
+			int presentDay = cal.get(Calendar.DATE);
+			
+			int pastMonth = 0,pastYear=0;
+			
+		    if(timePeriod.equals("oneMonth")){
+		    	if(presentMonth == 0){
+		    		pastMonth = 11;
+		    		pastYear = presentYear - 1;
+		    	}else{
+		    		pastMonth = presentMonth - 1;
+		    		pastYear = presentYear;
+		    	}
+		    }else if(timePeriod.equals("threeMonth")){
+		    	if(presentMonth >= 3){
+		    		pastMonth = presentMonth - 3;
+		    		pastYear = presentYear;
+		    	}else {
+		    		pastMonth = presentMonth + 9;
+		    		pastYear = presentYear - 1;
+		    	}
+		    	
+		    }else if(timePeriod.equals("sixMonth")){
+		    	if(presentMonth >= 6){
+		    		pastMonth = presentMonth - 6;
+		    		pastYear = presentYear;
+		    	}else {
+		    		pastMonth = presentMonth + 6;
+		    		pastYear = presentYear - 1;
+		    	}
+		    	
+		    }else if(timePeriod.equals("oneYear")){
+		    	pastYear = presentYear - 1;
+		    	pastMonth = presentMonth;
+		    }else if(timePeriod.equals("threeYear")){
+		    	pastYear = presentYear - 3;
+		    	pastMonth = presentMonth;
+		    }
+		   
 			URL url = null;
 			try {
-				if (month == 1 && day == 29) {
+				if (presentMonth == 1 && presentDay == 29) {
 					url = new URL("http://ichart.finance.yahoo.com/table.csv?s="+quoteCompany+"&d=1&e=29&f="
-									+ year + "&g=d&a=1&b=28&c=" + (year - 1)
+									+ presentYear + "&g=d&a=1&b=28&c=" + (presentYear - 1)
 									+ "&ignore.csv");
 				} else {
 					url = new URL("http://ichart.finance.yahoo.com/table.csv?s="+quoteCompany+"&d="
-									+ month + "&e=" + day + "&f=" + year
-									+ "&g=d&a=" + month + "&b=" + day + "&c="
-									+ (year - 1) + "&ignore.csv");
+									+ presentMonth + "&e=" + presentDay + "&f=" + presentYear
+									+ "&g=d&a=" + pastMonth + "&b=" + presentDay + "&c="
+									+ (pastYear) + "&ignore.csv");
 				}
 			}catch (MalformedURLException e) {
 					// TODO Auto-generated catch block
@@ -300,6 +421,17 @@ public class QuoteViewFragment extends Fragment implements OnClickListener{
 
 			return data;
 		}
+		
+		@Override
+		protected void onPreExecute() {
+			
+			super.onPreExecute();
+			pd = new ProgressDialog(getActivity(),AlertDialog.THEME_HOLO_DARK);
+			pd.setTitle("Loading Chart");
+			pd.setMessage("Loading chart data...");
+			pd.setCancelable(false);
+			pd.show();
+		}
 
 		@Override
 		protected void onPostExecute(LineData result) {
@@ -318,6 +450,7 @@ public class QuoteViewFragment extends Fragment implements OnClickListener{
 			chart.setBackgroundColor(Color.BLACK);
 			chart.setData(result);
 			chart.invalidate();
+			pd.dismiss();
 
 		}
 		

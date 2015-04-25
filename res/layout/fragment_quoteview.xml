@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:background="@color/black"
     android:orientation="vertical" >
@@ -9,227 +9,363 @@
         android:id="@+id/chart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.4" />
-
-    
-   <!--  <GridLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.5" >
-    </GridLayout> -->
+        android:layout_weight="0.5" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.4"
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
-       <TableLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:shrinkColumns="*"  android:stretchColumns="*">
+            android:layout_height="wrap_content" >
 
-                        <!-- Row 1 with single column -->
-                        <TableRow
-                            android:layout_height="wrap_content"
-                            android:layout_width="fill_parent"
-                            android:gravity="center_horizontal">
+            <TextView
+                android:id="@+id/oneMonth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="1M"
+                android:textColor="@color/gray" />
 
-                            <TextView
-                                android:layout_width="match_parent" android:layout_height="wrap_content"
-                                android:textSize="16dp" android:text="Stock Name"  android:layout_span="3"
-                                android:padding="8dip"  android:gravity="center"
-                                android:textColor="@color/white" android:id="@+id/stockNameTv"/>
+            <TextView
+                android:id="@+id/threeMonth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="3M"
+                android:textColor="@color/gray" />
 
-                       </TableRow>
-                       <View   android:id="@+id/firstDivider"
-        android:layout_height="2dp"
-        android:layout_width="fill_parent"
-        android:background="#FFFFFF" />
-         
-                        <!-- Row 2 with 3 columns -->
+            <TextView
+                android:id="@+id/sixMonth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="6M"
+                android:textColor="@color/gray" />
 
-                        <TableRow
-                            android:id="@+id/tableRow1"
-                            android:layout_height="wrap_content"
-                            android:layout_width="match_parent">
-                            <TextView
-                                android:id="@+id/openTv" android:text="OPEN"
-                                android:layout_weight="1"
-                                android:textColor="@color/white"
-                                android:padding="5dip" android:gravity="center"/>
-                            <TextView
-                                android:id="@+id/openValTv" android:text="oPrice"
-                                android:layout_weight="1" 
-                                android:textColor="@color/white"
-                                android:padding="5dip" android:gravity="center"/>
-                            <TextView
-                                android:id="@+id/mktCapTv" android:text="MKT CAP"
-                                android:layout_weight="1" 
-                                android:textColor="@color/white"
-                                android:padding="5dip" android:gravity="center"/>
-                            <TextView
-                                android:id="@+id/mktCapVal" android:text="mVal"
-                                android:layout_weight="1"
-                                android:textColor="@color/white"
-                                android:padding="5dip" android:gravity="center"/>
-                        </TableRow>
-                         <View   android:id="@+id/firstDivider"
-        						 android:layout_height="1dp"
-        						 android:layout_width="fill_parent"
-        						 android:background="@color/gray" />
-                        <!-- Row 3 with 2 columns -->
-                        <TableRow
-                            android:id="@+id/tableRow2"
-                            android:layout_height="wrap_content"
-                            android:layout_width="match_parent">
-                            <TextView
-                                android:id="@+id/highTv" android:text="HIGH"
-                                android:layout_weight="1"
-                                android:textColor="@color/white"
-                                android:padding="5dip" android:gravity="center"/>
-                            <TextView
-                                android:id="@+id/highValTv" android:text="hPrice"
-                                android:layout_weight="1" 
-                                android:textColor="@color/white"
-                                android:padding="5dip" android:gravity="center"/>
-                            <TextView
-                                android:id="@+id/wHighTv" android:text="52W HIGH"
-                                android:layout_weight="1" 
-                                android:textColor="@color/white"
-                                android:padding="5dip" android:gravity="center"/>
-                            <TextView
-                                android:id="@+id/wHighValTv" android:text="52wPrice"
-                                android:layout_weight="1"
-                                android:textColor="@color/white"
-                                android:padding="5dip" android:gravity="center"/>
-                        </TableRow>
-                          <View   android:id="@+id/firstDivider"
-        						 android:layout_height="1dp"
-        						 android:layout_width="fill_parent"
-        						 android:background="@color/gray" />
-                          <TableRow
-                            android:id="@+id/tableRow3"
-                            android:layout_height="wrap_content"
-                            android:layout_width="match_parent">
-                            <TextView
-                                android:id="@+id/lowTv" android:text="LOW"
-                                android:layout_weight="1"
-                                android:textColor="@color/white"
-                                android:padding="5dip" android:gravity="center"/>
-                            <TextView
-                                android:id="@+id/lowValTv" android:text="lPrice"
-                                android:layout_weight="1" 
-                                android:textColor="@color/white"
-                                android:padding="5dip" android:gravity="center"/>
-                            <TextView
-                                android:id="@+id/wlowTv" android:text="52W LOW"
-                                android:layout_weight="1" 
-                                android:textColor="@color/white"
-                                android:padding="5dip" android:gravity="center"/>
-                            <TextView
-                                android:id="@+id/wLowValTv" android:text="52LPrice"
-                                android:layout_weight="1"
-                                android:textColor="@color/white"
-                                android:padding="5dip" android:gravity="center"/>
-                        </TableRow>
-                          <View   android:id="@+id/firstDivider"
-        						 android:layout_height="1dp"
-        						 android:layout_width="fill_parent"
-        						 android:background="@color/gray" />
-                          
-                          <TableRow
-                            android:id="@+id/tableRow4"
-                            android:layout_height="wrap_content"
-                            android:layout_width="match_parent">
-                            <TextView
-                                android:id="@+id/volTv" android:text="VOL"
-                                android:layout_weight="1"
-                                android:textColor="@color/white"
-                                android:padding="5dip" android:gravity="center"/>
-                            <TextView
-                                android:id="@+id/volValTv" android:text="VOLVAL"
-                                android:layout_weight="1" 
-                                android:textColor="@color/white"
-                                android:padding="5dip" android:gravity="center"/>
-                            <TextView
-                                android:id="@+id/avgVolTv" android:text="AVG VOL"
-                                android:layout_weight="1" 
-                                android:textColor="@color/white"
-                                android:padding="5dip" android:gravity="center"/>
-                            <TextView
-                                android:id="@+id/avgVolValTv" android:text="Avg Vol Val"
-                                android:layout_weight="1"
-                                android:textColor="@color/white"
-                                android:padding="5dip" android:gravity="center"/>
-                        </TableRow>
-                          <View   android:id="@+id/firstDivider"
-        						 android:layout_height="1dp"
-        						 android:layout_width="fill_parent"
-        						 android:background="@color/gray" />
-                        <TableRow
-                            android:id="@+id/tableRow5"
-                            android:layout_height="wrap_content"
-                            android:layout_width="match_parent">
-                            <TextView
-                                android:id="@+id/peTV" android:text="P/E"
-                                android:layout_weight="1"
-                                android:textColor="@color/white"
-                                android:padding="5dip" android:gravity="center"/>
-                            <TextView
-                                android:id="@+id/peValTv" android:text="peVal"
-                                android:layout_weight="1" 
-                                android:textColor="@color/white"
-                                android:padding="5dip" android:gravity="center"/>
-                            <TextView
-                                android:id="@+id/yieldTv" android:text="YIELD"
-                                android:layout_weight="1" 
-                                android:textColor="@color/white"
-                                android:padding="5dip" android:gravity="center"/>
-                            <TextView
-                                android:id="@+id/yieldValTv" android:text="YieldVal"
-                                android:layout_weight="1"
-                                android:textColor="@color/white"
-                                android:padding="5dip" android:gravity="center"/>
-                        </TableRow>
-                          <View   android:id="@+id/firstDivider"
-        						 android:layout_height="1dp"
-        						 android:layout_width="fill_parent"
-        						 android:background="@color/gray" />
-                         
-                  
-                         
-      </TableLayout>
+            <TextView
+                android:id="@+id/oneYear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="1Y"
+                android:textStyle="bold"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/threeYear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="3Y"
+                android:textColor="@color/gray" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TableLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:shrinkColumns="*"
+                android:stretchColumns="*" >
+
+                <TableRow
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal" >
+
+                    <TextView
+                        android:id="@+id/stockNameTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_span="3"
+                        android:gravity="center"
+                        android:padding="8dip"
+                        android:text="Stock Name"
+                        android:textColor="@color/white"
+                        android:textSize="16dp" />
+                </TableRow>
+
+                <View
+                    android:id="@+id/firstDivider"
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dp"
+                    android:background="#FFFFFF" />
+
+                <TableRow
+                    android:id="@+id/tableRow1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/openTv"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dip"
+                        android:text="OPEN"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/openValTv"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dip"
+                        android:text="oPrice"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/mktCapTv"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dip"
+                        android:text="MKT CAP"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/mktCapVal"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dip"
+                        android:text="mVal"
+                        android:textColor="@color/white" />
+                </TableRow>
+
+                <View
+                    android:id="@+id/firstDivider"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray" />
+
+                <TableRow
+                    android:id="@+id/tableRow2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/highTv"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dip"
+                        android:text="HIGH"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/highValTv"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dip"
+                        android:text="hPrice"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/wHighTv"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dip"
+                        android:text="52W HIGH"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/wHighValTv"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dip"
+                        android:text="52wPrice"
+                        android:textColor="@color/white" />
+                </TableRow>
+
+                <View
+                    android:id="@+id/firstDivider"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray" />
+
+                <TableRow
+                    android:id="@+id/tableRow3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/lowTv"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dip"
+                        android:text="LOW"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/lowValTv"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dip"
+                        android:text="lPrice"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/wlowTv"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dip"
+                        android:text="52W LOW"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/wLowValTv"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dip"
+                        android:text="52LPrice"
+                        android:textColor="@color/white" />
+                </TableRow>
+
+                <View
+                    android:id="@+id/firstDivider"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray" />
+
+                <TableRow
+                    android:id="@+id/tableRow4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/volTv"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dip"
+                        android:text="VOL"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/volValTv"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dip"
+                        android:text="VOLVAL"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/avgVolTv"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dip"
+                        android:text="AVG VOL"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/avgVolValTv"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dip"
+                        android:text="Avg Vol Val"
+                        android:textColor="@color/white" />
+                </TableRow>
+
+                <View
+                    android:id="@+id/firstDivider"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray" />
+
+                <TableRow
+                    android:id="@+id/tableRow5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/peTV"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dip"
+                        android:text="P/E"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/peValTv"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dip"
+                        android:text="peVal"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/yieldTv"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dip"
+                        android:text="YIELD"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:id="@+id/yieldValTv"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="5dip"
+                        android:text="YieldVal"
+                        android:textColor="@color/white" />
+                </TableRow>
+
+                <View
+                    android:id="@+id/firstDivider"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray" />
+            </TableLayout>
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="5dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:text="Favorites"
+                android:textColor="@color/white" />
+
+            <ImageView
+                android:id="@+id/notFavIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/ic_action_not_important" />
+
+            <ImageView
+                android:id="@+id/favIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/ic_action_important" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="5dp" />
     </LinearLayout>
-    
-     <LinearLayout
-         android:layout_width="match_parent"
-         android:layout_height="65dp"
-         android:orientation="horizontal" >
-
-         <TextView
-             android:id="@+id/textView1"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:textColor="@color/white"
-             android:layout_weight="1"
-             android:text="Favorites" />
-
-         <ImageView
-             android:id="@+id/notFavIcon"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_weight="1"
-             android:src="@drawable/ic_action_not_important" />
-
-         <ImageView
-             android:id="@+id/favIcon"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_weight="1"
-             android:src="@drawable/ic_action_important" />
-
-       </LinearLayout>
 
 
 </LinearLayout>
