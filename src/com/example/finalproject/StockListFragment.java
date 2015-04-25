@@ -11,7 +11,9 @@ import java.util.List;
 import org.json.JSONException;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -23,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
@@ -31,6 +34,7 @@ import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.baoyz.swipemenulistview.SwipeMenuListView.OnMenuItemClickListener;
 import com.baoyz.swipemenulistview.SwipeMenuListView.OnSwipeListener;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -128,11 +132,13 @@ public class StockListFragment extends Fragment{
 						case 0:
 							// open
 							//open(item);
+							
 							mListener.securityClicked(stockListAdapter.getItem(position));
 							break;
 						case 1:
 							// delete
 //							delete(item);
+							removeFromFavorites(securityList.get(position).getSymbol());
 							securityList.remove(position);
 							stockListAdapter.notifyDataSetChanged();
 							break;
@@ -217,7 +223,7 @@ public class StockListFragment extends Fragment{
 	
 	
 	public class JSONQuoteAsyncTask extends AsyncTask<String, Void, ArrayList<Security>>{
-
+		ProgressDialog pd;
 		@Override
 		protected ArrayList<Security> doInBackground(String... params) {
 
@@ -257,15 +263,20 @@ public class StockListFragment extends Fragment{
 
 		@Override
 		protected void onPreExecute() {
-			// TODO Auto-generated method stub
+			
 			super.onPreExecute();
+			pd = new ProgressDialog(getActivity(),AlertDialog.THEME_HOLO_DARK);
+			pd.setTitle("Loading Stocks Data");
+			pd.setMessage("Loading...");
+			pd.setCancelable(false);
+			pd.show();
 		}
 
 		@Override
 		protected void onPostExecute(ArrayList<Security> result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
-			
+			pd.dismiss();
 			
 			
 			if(result != null){
@@ -315,5 +326,30 @@ public class StockListFragment extends Fragment{
 				getResources().getDisplayMetrics());
 	}
 	
-	
+private void removeFromFavorites(String stockSymbol) {
+		
+		ParseQuery<ParseObject> favQuery = ParseQuery.getQuery("Favorites");
+		favQuery.whereEqualTo("UserName", ParseUser.getCurrentUser().getUsername());
+		favQuery.whereEqualTo("StockName", stockSymbol);
+		favQuery.getFirstInBackground(new GetCallback<ParseObject>() {
+			
+			@Override
+			public void done(ParseObject object, ParseException e) {
+				
+				if(e == null){
+					try {
+						object.delete();
+						Toast.makeText(getActivity(), "Successfully removed from Favorites", Toast.LENGTH_SHORT).show();
+					} catch (ParseException e1) {
+						
+						e1.printStackTrace();
+					}
+				}else{
+					Log.d("Error in Fav",e.getLocalizedMessage());
+				}
+			}
+		});
+		
+	}
+
 }

@@ -183,6 +183,7 @@ public class MarketSummaryActivity extends Activity implements NewsDelegate, Sto
 	    public boolean onQueryTextSubmit(String stockSymbol) {
 	    	
 	    	//This should fix the bug. Only one search per second and a half.
+	    	stockSymbol = stockSymbol.toUpperCase();
 	    	long searchTime = System.currentTimeMillis();
 	    	if(searchTime > lastSearchTime + 1500){
 		    	new JSONQuoteSearchAsyncTask().execute("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22"+ stockSymbol +"%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=");	
@@ -276,9 +277,12 @@ public class MarketSummaryActivity extends Activity implements NewsDelegate, Sto
 				// TODO Auto-generated method stub
 				super.onPostExecute(result);
 				
-				if(result != null){
+				if(result != null && !result.get(0).getCompanyName().equals("null")
+						&& !result.get(0).getSymbol().equals("null")){
 					getQuote(result.get(0));
 					Log.d("DEMO", result.toString());
+				}else{
+					Toast.makeText(MarketSummaryActivity.this, "No stock found in Yahoo API", Toast.LENGTH_SHORT).show();
 				}
 				
 			
