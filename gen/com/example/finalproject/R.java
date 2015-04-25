@@ -61,19 +61,20 @@ public final class R {
     }
     public static final class id {
         public static final int LinearLayout1=0x7f090000;
-        public static final int action_search=0x7f09003d;
+        public static final int action_search=0x7f09003e;
+        public static final int alertset=0x7f090034;
         public static final int avgVolTv=0x7f09002a;
         public static final int avgVolValTv=0x7f09002b;
-        public static final int b_search=0x7f090036;
+        public static final int b_search=0x7f090037;
         public static final int buttonCancel=0x7f09000e;
         public static final int buttonCreateNewAccount=0x7f090006;
         public static final int buttonLogin=0x7f090005;
         public static final int buttonSignup=0x7f09000d;
-        public static final int changeButton=0x7f09003b;
+        public static final int changeButton=0x7f09003c;
         public static final int chart=0x7f090010;
         public static final int container=0x7f090007;
         public static final int detailcontainer=0x7f090008;
-        public static final int editText1=0x7f090035;
+        public static final int editText1=0x7f090036;
         public static final int editTextEmail=0x7f090003;
         public static final int editTextPassword=0x7f090004;
         public static final int editTextPasswordConfirm=0x7f09000c;
@@ -83,14 +84,14 @@ public final class R {
         public static final int highTv=0x7f09001e;
         public static final int highValTv=0x7f09001f;
         public static final int imageView1=0x7f090002;
-        public static final int logout=0x7f09003c;
+        public static final int logout=0x7f09003d;
         public static final int lowTv=0x7f090023;
         public static final int lowValTv=0x7f090024;
         public static final int lv_news=0x7f09000f;
-        public static final int lv_stock=0x7f090037;
+        public static final int lv_stock=0x7f090038;
         public static final int mktCapTv=0x7f09001b;
         public static final int mktCapVal=0x7f09001c;
-        public static final int newsContentTv=0x7f090038;
+        public static final int newsContentTv=0x7f090039;
         public static final int newscontainer=0x7f09000a;
         public static final int notFavIcon=0x7f090032;
         public static final int oneMonth=0x7f090011;
@@ -99,10 +100,10 @@ public final class R {
         public static final int openValTv=0x7f09001a;
         public static final int peTV=0x7f09002d;
         public static final int peValTv=0x7f09002e;
-        public static final int priceTv=0x7f09003a;
-        public static final int searchbar=0x7f090034;
+        public static final int priceTv=0x7f09003b;
+        public static final int searchbar=0x7f090035;
         public static final int sixMonth=0x7f090013;
-        public static final int sourceByTv=0x7f090039;
+        public static final int sourceByTv=0x7f09003a;
         public static final int stockNameTv=0x7f090016;
         public static final int stockscontainer=0x7f090009;
         public static final int tableRow1=0x7f090018;

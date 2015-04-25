@@ -1,22 +1,43 @@
 package com.example.finalproject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.json.JSONException;
+
+import com.example.finalproject.StockListFragment.JSONQuoteAsyncTask;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.app.Service;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 public class AlertService extends Service {
@@ -24,7 +45,10 @@ public class AlertService extends Service {
 	private final IBinder mBinder = new LocalBinder();
 	// Random number generator
 	private final Random mGenerator = new Random();
-
+	
+	ArrayList<StockAlert> Alerts;
+	ArrayList<Security> Stocks;
+ 
 	public static final long NOTIFY_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
 	// run on another Thread to avoid crash
@@ -46,7 +70,7 @@ public class AlertService extends Service {
 		}
 		// schedule task
 		mTimer.scheduleAtFixedRate(new CheckAlertTask(), 0, NOTIFY_INTERVAL);
-		sendAlert();
+		//sendAlert();
 	}
 
 	class CheckAlertTask extends TimerTask {
@@ -59,20 +83,11 @@ public class AlertService extends Service {
 				@Override
 				public void run() {
 					// display toast
-					Toast.makeText(getApplicationContext(), getDateTime(),
-							Toast.LENGTH_SHORT).show();
+					sendAlert();
 				}
 
 			});
 		}
-
-		private String getDateTime() {
-			// get date time in custom format
-			SimpleDateFormat sdf = new SimpleDateFormat(
-					"[yyyy/MM/dd - HH:mm:ss]");
-			return sdf.format(new Date());
-		}
-
 	}
 	
 	
@@ -119,6 +134,30 @@ public class AlertService extends Service {
 	 */
 	public void checkAlerts() {
 
+		Alerts = new ArrayList<StockAlert>();
+		
+		ParseQuery<ParseObject> alertQuery = ParseQuery.getQuery("Alert");
+		alertQuery.whereEqualTo("UserName", ParseUser.getCurrentUser().getUsername());
+		alertQuery.findInBackground(new FindCallback<ParseObject>() {
+			
+			@Override
+			public void done(List<ParseObject> objects, ParseException e) {
+				// TODO Auto-generated method stub
+				for(ParseObject obj: objects){
+					Alerts.add(new StockAlert(obj.getString("oldPrice"), obj.getString("targetPrice"), obj.getString("symbol")));
+				}
+				
+				//new JSONQuoteAsyncTask().execute("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22"+ stocks +"%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=");	
+
+				
+			}
+		});
+		
+		
+		
+		
+		
+		
 	}
 
 	public void sendAlert() {
@@ -146,5 +185,78 @@ public class AlertService extends Service {
 		// mId allows you to update the notification later on.
 		mNotificationManager.notify(0, mBuilder.build());
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public class JSONQuoteAsyncTask extends AsyncTask<String, Void, ArrayList<Security>>{
+		ProgressDialog pd;
+		@Override
+		protected ArrayList<Security> doInBackground(String... params) {
+
+			try {
+			URL url = new URL(params[0]);
+			HttpURLConnection con;	
+			con = (HttpURLConnection) url.openConnection();
+			con.setRequestMethod("GET");
+			con.connect();
+			int statusCode = con.getResponseCode();
+			if(statusCode == HttpURLConnection.HTTP_OK){
+				
+				BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+				StringBuilder sb = new StringBuilder();
+				String line = reader.readLine();
+				
+				while(line != null){
+					sb.append(line);
+					line = reader.readLine();
+				}
+				
+				return JSONUtility.StockJSONParser.parseStocks(sb.toString());
+				
+			}
+			
+			} catch (IOException e) {
+		
+				e.printStackTrace();
+			} catch (JSONException e) {
+				
+				e.printStackTrace();
+			}
+			
+			
+			return null;
+		}
+
+		
+
+		@Override
+		protected void onPostExecute(ArrayList<Security> result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+		
+					
+			if(result != null){
+				Stocks = result;
+				
+				
+				
+				Log.d("DEMO", result.toString());
+			}
+			
+		}
+		
+		
+
+	}
+	
+	
+	
 
 }

@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -22,10 +23,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,7 +45,7 @@ public class QuoteViewFragment extends Fragment implements OnClickListener{
 	Security stockObj;
 	TextView openTv,mktCapTv,highTv,lowTv,wHighTv,wLowTv,volTv,avgVolTv,peTv,yieldTv,stockNameTv;
 	TextView oneMonth,threeMonth,sixMonth,oneYear,threeYear;
-	ImageView favIcon,notFavIcon;
+	ImageView favIcon,notFavIcon, alertSet;
 	
 	public QuoteViewFragment(Security stockObj){
 		this.stockObj = stockObj;
@@ -73,6 +72,7 @@ public class QuoteViewFragment extends Fragment implements OnClickListener{
 		new getCsv().execute(stockSymbol,"oneYear");
 		favIcon = (ImageView) getView().findViewById(R.id.favIcon);
 		notFavIcon = (ImageView) getView().findViewById(R.id.notFavIcon);
+		alertSet = (ImageView) getView().findViewById(R.id.alertset);
 		
 		ParseQuery<ParseObject> isFavQuery = ParseQuery.getQuery("Favorites");
 		isFavQuery.whereEqualTo("UserName", ParseUser.getCurrentUser().getUsername());
@@ -139,6 +139,7 @@ public class QuoteViewFragment extends Fragment implements OnClickListener{
 		
 		favIcon.setOnClickListener(this);
 		notFavIcon.setOnClickListener(this);
+		alertSet.setOnClickListener(this);
 		 
 		
 	}
@@ -147,6 +148,11 @@ public class QuoteViewFragment extends Fragment implements OnClickListener{
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
+		
+		case R.id.alertset:
+			setPriceAlertDialog();
+			break;
+		
 		case R.id.favIcon:
 			
 			removeFromFavorites();
@@ -293,6 +299,56 @@ public class QuoteViewFragment extends Fragment implements OnClickListener{
 		
 		return rootView;
 	}
+	
+	
+	
+	
+	
+	
+	public void setPriceAlertDialog(){
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setTitle("Set the alert price");
+
+		// Set up the input
+		final EditText input = new EditText(getActivity());
+		// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+		//input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+		builder.setView(input);
+
+		// Set up the buttons
+		builder.setPositiveButton("Set", new DialogInterface.OnClickListener() { 
+		    @Override
+		    public void onClick(DialogInterface dialog, int which) {
+		    	ParseObject alertObj = new ParseObject("Alert");
+		    	alertObj.put("UserName", ParseUser.getCurrentUser().getUsername());
+		    	alertObj.put("targetPrice", input.getText().toString());
+		    	alertObj.put("oldPrice", stockObj.getAskPrice());
+		    	alertObj.put("symbol", stockSymbol);
+		    	alertObj.saveInBackground(new SaveCallback() {
+					
+					@Override
+					public void done(ParseException e) {
+						
+						if(e == null){	
+							Toast.makeText(getActivity(), "Alert Saved.", Toast.LENGTH_SHORT).show();
+						}else{
+							Log.d("Error in Alert Setting", e.getLocalizedMessage());
+						}
+					}
+				});
+		    }
+		});
+		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		    @Override
+		    public void onClick(DialogInterface dialog, int which) {
+		        dialog.cancel();
+		    }
+		});
+
+		builder.show();
+	}
+	
+	
 	
 	
 	
