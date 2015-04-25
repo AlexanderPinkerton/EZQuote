@@ -45,11 +45,11 @@ public class AlertService extends Service {
 			mTimer = new Timer();
 		}
 		// schedule task
-		// mTimer.scheduleAtFixedRate(new TimeDisplayTimerTask(), 0, NOTIFY_INTERVAL);
+		mTimer.scheduleAtFixedRate(new CheckAlertTask(), 0, NOTIFY_INTERVAL);
 		sendAlert();
 	}
 
-	class TimeDisplayTimerTask extends TimerTask {
+	class CheckAlertTask extends TimerTask {
 
 		@Override
 		public void run() {
