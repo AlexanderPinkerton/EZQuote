@@ -43,6 +43,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        
+    <service
+        android:name=".AlertService"
+        android:label="Alert Service" >
+    </service>
+        
     </application>
 
 </manifest>

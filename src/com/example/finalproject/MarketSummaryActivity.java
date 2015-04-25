@@ -15,6 +15,7 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -69,7 +70,7 @@ public class MarketSummaryActivity extends Activity implements NewsDelegate, Sto
 		//stockLister.updateSecurities(stocks);
 
 		
-		
+		startService(new Intent(this, AlertService.class));
 	}
 
 	
