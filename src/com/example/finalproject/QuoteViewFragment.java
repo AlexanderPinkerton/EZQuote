@@ -18,6 +18,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +47,9 @@ public class QuoteViewFragment extends Fragment implements OnClickListener{
 	Security stockObj;
 	TextView openTv,mktCapTv,highTv,lowTv,wHighTv,wLowTv,volTv,avgVolTv,peTv,yieldTv,stockNameTv;
 	TextView oneMonth,threeMonth,sixMonth,oneYear,threeYear;
+	TextView favTv,notFavTv;
 	ImageView favIcon,notFavIcon, alertSet;
+	LinearLayout favLL,notFavLL;
 	
 	public QuoteViewFragment(Security stockObj){
 		this.stockObj = stockObj;
@@ -87,9 +91,18 @@ public class QuoteViewFragment extends Fragment implements OnClickListener{
 					if(object != null){
 						favIcon.setVisibility(View.VISIBLE);
 						notFavIcon.setVisibility(View.GONE);
+						favTv.setVisibility(View.VISIBLE);
+						notFavTv.setVisibility(View.GONE);
+						favLL.setVisibility(View.VISIBLE);
+						notFavLL.setVisibility(View.GONE);
+						
 					}else{
 						favIcon.setVisibility(View.GONE);
 						notFavIcon.setVisibility(View.VISIBLE);
+						favTv.setVisibility(View.GONE);
+						notFavTv.setVisibility(View.VISIBLE);
+						favLL.setVisibility(View.GONE);
+						notFavLL.setVisibility(View.VISIBLE);
 					}
 				}else{
 					favIcon.setVisibility(View.GONE);
@@ -99,6 +112,9 @@ public class QuoteViewFragment extends Fragment implements OnClickListener{
 				
 			}
 		});
+		
+		favLL = (LinearLayout)getView().findViewById(R.id.favLL);
+		notFavLL = (LinearLayout)getView().findViewById(R.id.notFavLL);
 		
 		
 		openTv = (TextView) getView().findViewById(R.id.openValTv);
@@ -118,6 +134,9 @@ public class QuoteViewFragment extends Fragment implements OnClickListener{
 		sixMonth = (TextView) getView().findViewById(R.id.sixMonth);
 		oneYear = (TextView) getView().findViewById(R.id.oneYear);
 		threeYear = (TextView) getView().findViewById(R.id.threeYear);
+		
+		favTv = (TextView)getView().findViewById(R.id.favTv);
+		notFavTv = (TextView)getView().findViewById(R.id.notFavTv);
 		
 		oneMonth.setOnClickListener(this);
 		threeMonth.setOnClickListener(this);
@@ -251,7 +270,11 @@ public class QuoteViewFragment extends Fragment implements OnClickListener{
 					try {
 						object.delete();
 						favIcon.setVisibility(View.GONE);
+						favTv.setVisibility(View.GONE);
 						notFavIcon.setVisibility(View.VISIBLE);
+						notFavTv.setVisibility(View.VISIBLE);
+						favLL.setVisibility(View.GONE);
+						notFavLL.setVisibility(View.VISIBLE);
 						Toast.makeText(getActivity(), "Successfully removed from Favorites", Toast.LENGTH_SHORT).show();
 					} catch (ParseException e1) {
 						
@@ -278,6 +301,10 @@ public class QuoteViewFragment extends Fragment implements OnClickListener{
 				if(e == null){
 					favIcon.setVisibility(View.VISIBLE);
 					notFavIcon.setVisibility(View.GONE);
+					favTv.setVisibility(View.VISIBLE);
+					notFavTv.setVisibility(View.GONE);
+					favLL.setVisibility(View.VISIBLE);
+					notFavLL.setVisibility(View.GONE);
 					Toast.makeText(getActivity(), "Successfully saved in Favorites", Toast.LENGTH_SHORT).show();
 				}else{
 					Log.d("Error in Fav", e.getLocalizedMessage());
@@ -306,11 +333,13 @@ public class QuoteViewFragment extends Fragment implements OnClickListener{
 	
 	
 	public void setPriceAlertDialog(){
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),AlertDialog.THEME_HOLO_DARK);
 		builder.setTitle("Set the alert price");
-
+		
 		// Set up the input
 		final EditText input = new EditText(getActivity());
+		input.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL|InputType.TYPE_NUMBER_FLAG_SIGNED);
+		input.setTextColor(Color.parseColor("#33b5e5"));
 		// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
 		//input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 		builder.setView(input);
@@ -319,6 +348,12 @@ public class QuoteViewFragment extends Fragment implements OnClickListener{
 		builder.setPositiveButton("Set", new DialogInterface.OnClickListener() { 
 		    @Override
 		    public void onClick(DialogInterface dialog, int which) {
+		    	
+		    	if(input.getText().toString().trim().length() == 0){
+		    		Toast.makeText(getActivity(), "Input is required", Toast.LENGTH_SHORT).show();
+		    		return;
+		    	}
+		    	
 		    	ParseObject alertObj = new ParseObject("Alert");
 		    	alertObj.put("UserName", ParseUser.getCurrentUser().getUsername());
 		    	alertObj.put("targetPrice", input.getText().toString());

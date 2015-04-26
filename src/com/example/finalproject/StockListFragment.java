@@ -91,8 +91,8 @@ public class StockListFragment extends Fragment{
 						SwipeMenuItem openItem = new SwipeMenuItem(
 								getActivity());
 						// set item background
-						openItem.setBackground(new ColorDrawable(Color.rgb(128, 128,
-								128)));
+						openItem.setBackground(new ColorDrawable(Color.rgb(0xD0, 0xDF,
+								0x00)));
 						// set item width
 						openItem.setWidth(dp2px(90));
 						// set item title
@@ -110,8 +110,10 @@ public class StockListFragment extends Fragment{
 						// set item background
 						/*deleteItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
 								0xCE)));*/
-						deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
-								0x3F, 0x25)));
+					//	deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
+						//		0x3F, 0x25))); 33b5e5 2d9fc9
+						deleteItem.setBackground(new ColorDrawable(Color.rgb(0x2d,
+									0x9f, 0xc9)));
 						// set item width
 						deleteItem.setWidth(dp2px(90));
 						// set a icon

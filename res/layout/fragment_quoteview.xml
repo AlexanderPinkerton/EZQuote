@@ -329,50 +329,89 @@
             </TableLayout>
         </LinearLayout>
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="5dp" />
+ 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
 
-            <TextView
-                android:id="@+id/textView1"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:text="Favorites"
-                android:textColor="@color/white" />
+                android:layout_weight="0.5"
+                android:id="@+id/notFavLL"
+                android:gravity="center"
+                android:visibility="gone"
+                android:orientation="vertical" >
 
-            <ImageView
-                android:id="@+id/notFavIcon"
+               
+			<TextView
+                    android:id="@+id/notFavTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/gray"
+                    android:visibility="gone"
+                    android:text="Favorites"
+                    android:textSize="8dp" />
+                
+                 <ImageView
+                    android:id="@+id/notFavIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:src="@drawable/ic_action_not_important" />
+			
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:src="@drawable/ic_action_not_important" />
-
+                android:layout_weight="0.5"
+                android:id="@+id/favLL"
+                android:gravity="center"
+                android:orientation="vertical" >
+                
             <ImageView
                 android:id="@+id/favIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:src="@drawable/ic_action_important" />
+               
+            <TextView
+                    android:id="@+id/favTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="8dp"
+                    android:text="Favorites"
+                    android:textColor="@color/white" />
+                
             
-            <ImageView
-                android:id="@+id/alertset"
+            </LinearLayout>
+             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:src="@drawable/appicon" />
-            
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:orientation="vertical" >
+            <ImageView
+                android:id="@+id/alertset"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_warning" />
+             <TextView
+                    android:id="@+id/favTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="9dp"
+                    android:text="Alert me"
+                    android:textColor="@color/white" />
+            </LinearLayout>
         </LinearLayout>
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="5dp" />
+      
     </LinearLayout>
 
 
