@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -30,10 +31,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.CombinedChart;
+import com.github.mikephil.charting.charts.CombinedChart.DrawOrder;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.XAxis.XAxisPosition;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.ValueFormatter;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -42,7 +53,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 public class QuoteViewFragment extends Fragment implements OnClickListener {
-	LineChart chart;
+	CombinedChart chart;
 	String stockSymbol;
 	Security stockObj;
 	TextView openTv, mktCapTv, highTv, lowTv, wHighTv, wLowTv, volTv, avgVolTv,
@@ -73,12 +84,16 @@ public class QuoteViewFragment extends Fragment implements OnClickListener {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
-		chart = (LineChart) getView().findViewById(R.id.chart);
+		chart = (CombinedChart) getView().findViewById(R.id.chart);
 		new getCsv().execute(stockSymbol, "oneYear");
 		favIcon = (ImageView) getView().findViewById(R.id.favIcon);
 		notFavIcon = (ImageView) getView().findViewById(R.id.notFavIcon);
 		alertSet = (ImageView) getView().findViewById(R.id.alertset);
-
+		favLL = (LinearLayout) getView().findViewById(R.id.favLL);
+		notFavLL = (LinearLayout) getView().findViewById(R.id.notFavLL);
+		favTv = (TextView) getView().findViewById(R.id.favTv);
+		notFavTv = (TextView) getView().findViewById(R.id.notFavTv);
+		
 		ParseQuery<ParseObject> isFavQuery = ParseQuery.getQuery("Favorites");
 		isFavQuery.whereEqualTo("UserName", ParseUser.getCurrentUser()
 				.getUsername());
@@ -91,32 +106,34 @@ public class QuoteViewFragment extends Fragment implements OnClickListener {
 
 				if (e == null) {
 					if (object != null) {
-						favIcon.setVisibility(View.VISIBLE);
-						notFavIcon.setVisibility(View.GONE);
-						favTv.setVisibility(View.VISIBLE);
 						notFavTv.setVisibility(View.GONE);
-						favLL.setVisibility(View.VISIBLE);
+						notFavIcon.setVisibility(View.GONE);
 						notFavLL.setVisibility(View.GONE);
+						favLL.setVisibility(View.VISIBLE);
+						favIcon.setVisibility(View.VISIBLE);
+						favTv.setVisibility(View.VISIBLE);
 
 					} else {
-						favIcon.setVisibility(View.GONE);
-						notFavIcon.setVisibility(View.VISIBLE);
 						favTv.setVisibility(View.GONE);
-						notFavTv.setVisibility(View.VISIBLE);
+						favIcon.setVisibility(View.GONE);
 						favLL.setVisibility(View.GONE);
 						notFavLL.setVisibility(View.VISIBLE);
+						notFavIcon.setVisibility(View.VISIBLE);
+						notFavTv.setVisibility(View.VISIBLE);
 					}
 				} else {
+					favTv.setVisibility(View.GONE);
 					favIcon.setVisibility(View.GONE);
+					favLL.setVisibility(View.GONE);
+					notFavLL.setVisibility(View.VISIBLE);
 					notFavIcon.setVisibility(View.VISIBLE);
+					notFavTv.setVisibility(View.VISIBLE);
 					Log.d("Error in Fav", e.getLocalizedMessage());
 				}
 
 			}
 		});
 
-		favLL = (LinearLayout) getView().findViewById(R.id.favLL);
-		notFavLL = (LinearLayout) getView().findViewById(R.id.notFavLL);
 
 		openTv = (TextView) getView().findViewById(R.id.openValTv);
 		openTv.setOnClickListener(this);
@@ -147,8 +164,6 @@ public class QuoteViewFragment extends Fragment implements OnClickListener {
 		oneYear = (TextView) getView().findViewById(R.id.oneYear);
 		threeYear = (TextView) getView().findViewById(R.id.threeYear);
 
-		favTv = (TextView) getView().findViewById(R.id.favTv);
-		notFavTv = (TextView) getView().findViewById(R.id.notFavTv);
 
 		oneMonth.setOnClickListener(this);
 		threeMonth.setOnClickListener(this);
@@ -344,10 +359,10 @@ public class QuoteViewFragment extends Fragment implements OnClickListener {
 						object.delete();
 						favIcon.setVisibility(View.GONE);
 						favTv.setVisibility(View.GONE);
-						notFavIcon.setVisibility(View.VISIBLE);
-						notFavTv.setVisibility(View.VISIBLE);
 						favLL.setVisibility(View.GONE);
 						notFavLL.setVisibility(View.VISIBLE);
+						notFavIcon.setVisibility(View.VISIBLE);
+						notFavTv.setVisibility(View.VISIBLE);
 						Toast.makeText(getActivity(),
 								"Successfully removed from Favorites",
 								Toast.LENGTH_SHORT).show();
@@ -374,12 +389,12 @@ public class QuoteViewFragment extends Fragment implements OnClickListener {
 			public void done(ParseException e) {
 
 				if (e == null) {
-					favIcon.setVisibility(View.VISIBLE);
 					notFavIcon.setVisibility(View.GONE);
-					favTv.setVisibility(View.VISIBLE);
 					notFavTv.setVisibility(View.GONE);
-					favLL.setVisibility(View.VISIBLE);
 					notFavLL.setVisibility(View.GONE);
+					favLL.setVisibility(View.VISIBLE);
+					favIcon.setVisibility(View.VISIBLE);
+					favTv.setVisibility(View.VISIBLE);
 					Toast.makeText(getActivity(),
 							"Successfully saved in Favorites",
 							Toast.LENGTH_SHORT).show();
@@ -468,11 +483,11 @@ public class QuoteViewFragment extends Fragment implements OnClickListener {
 
 	}
 
-	class getCsv extends AsyncTask<String, Integer, LineData> {
+	class getCsv extends AsyncTask<String, Integer, CombinedData> {
 		ProgressDialog pd;
 
 		@Override
-		protected LineData doInBackground(String... params) {
+		protected CombinedData doInBackground(String... params) {
 			// TODO Auto-generated method stub
 			ArrayList<String> stocklist = new ArrayList<String>();
 			ArrayList<String> stockDate = new ArrayList<String>();
@@ -480,7 +495,10 @@ public class QuoteViewFragment extends Fragment implements OnClickListener {
 			ArrayList<Float> stockClose = new ArrayList<Float>();
 
 			ArrayList<Entry> valsPrice = new ArrayList<Entry>();
-			ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
+			ArrayList<BarEntry> valsVolume = new ArrayList<BarEntry>();
+			LineData lineData = new LineData();
+			BarData barData = new BarData();
+			
 			ArrayList<String> xVals = new ArrayList<String>();
 
 			String quoteCompany = params[0];// Company Stock Code!!!!
@@ -541,7 +559,7 @@ public class QuoteViewFragment extends Fragment implements OnClickListener {
 									+ quoteCompany + "&d=" + presentMonth
 									+ "&e=" + presentDay + "&f=" + presentYear
 									+ "&g=d&a=" + pastMonth + "&b="
-									+ presentDay + "&c=" + (pastYear)
+									+ presentDay + "&c=" + pastYear
 									+ "&ignore.csv");
 				}
 			} catch (MalformedURLException e) {
@@ -555,32 +573,81 @@ public class QuoteViewFragment extends Fragment implements OnClickListener {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+
+
+
+
 			for (int i = 1; i < stocklist.size(); i++) {
 				String[] stock = stocklist.get(i).split(",");
 				stockDate.add(stock[0]);
 				stockVolume.add(Float.parseFloat(stock[5]));
 				stockClose.add(Float.parseFloat(stock[6]));
-
 			}
 
 			Collections.reverse(stockDate);
 			Collections.reverse(stockVolume);
 			Collections.reverse(stockClose);
 
+
+	        YAxis rightAxis = chart.getAxisRight();
+			
+			if(Collections.max(stockVolume) > 1500000){
+				for(int i = 0; i < stockVolume.size();i++){
+					stockVolume.set(i, stockVolume.get(i)/1000000);
+				}
+				rightAxis.setValueFormatter(new FormatterM());
+			}else if(Collections.max(stockVolume) > 1500){
+				for(int i = 0; i < stockVolume.size();i++){
+					stockVolume.set(i, stockVolume.get(i)/1000);
+				}
+				rightAxis.setValueFormatter(new FormatterK());
+			}
+			
+			
 			for (int i = 0; i < stockDate.size(); i++) {
 				Entry temp = new Entry(stockClose.get(i), i);
 				valsPrice.add(temp);
-				xVals.add(stockDate.get(i));
+				BarEntry temp2 = new BarEntry(stockVolume.get(i),i);
+				valsVolume.add(temp2);
 			}
+			
+			
+	        chart.setDrawOrder(new DrawOrder[] {
+	                DrawOrder.BAR, DrawOrder.LINE
+	        });
 
-			LineDataSet setComp1 = new LineDataSet(valsPrice, params[0]);
-			setComp1.setCircleColor(Color.GRAY);
-			setComp1.setCircleSize(1f);
-			setComp1.setColor(Color.GRAY);
+	        rightAxis.setDrawGridLines(false);
+	        rightAxis.setAxisMaxValue((float) (Collections.max(stockVolume)*1.6));
+	        
 
-			dataSets.add(setComp1);
+	        YAxis leftAxis = chart.getAxisLeft();
+	        leftAxis.setAxisMinValue((float) (Collections.min(stockClose)*0.7));
+	        leftAxis.setDrawGridLines(false);
 
-			LineData data = new LineData(xVals, dataSets);
+	        XAxis xAxis = chart.getXAxis();
+	        xAxis.setPosition(XAxisPosition.BOTH_SIDED);
+			
+	        CombinedData data = new CombinedData(stockDate);
+
+	        LineDataSet lineSet = new LineDataSet(valsPrice, "Price");
+	        lineSet.setValueTextColor(Color.WHITE);
+	        lineSet.setCircleSize(1f);
+	        lineSet.setColor(Color.WHITE);
+	        lineSet.setCircleColor(Color.WHITE);
+	        lineSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+	        lineData.addDataSet(lineSet);
+	        
+	        BarDataSet barSet = new BarDataSet(valsVolume, "Volume");
+	        barSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
+	        barSet.setValueTextColor(Color.WHITE);;
+	        barData.addDataSet(barSet);
+	        
+
+	        data.setData(lineData);
+	        data.setData(barData);
+			
+
+			
 
 			return data;
 		}
@@ -597,17 +664,17 @@ public class QuoteViewFragment extends Fragment implements OnClickListener {
 		}
 
 		@Override
-		protected void onPostExecute(LineData result) {
+		protected void onPostExecute(CombinedData result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
 			chart.getXAxis().setTextColor(Color.WHITE);
+			chart.getXAxis().setPosition(XAxisPosition.TOP);
 			chart.getAxisLeft().setTextColor(Color.WHITE);
 			chart.getAxisRight().setTextColor(Color.WHITE);
+			chart.getLegend().setEnabled(false);
 			chart.getLegend().setTextColor(Color.WHITE);
-
 			chart.getAxisLeft().setStartAtZero(false);
-			chart.getAxisRight().setStartAtZero(false);
-
+			chart.getAxisRight().setStartAtZero(true);
 			chart.setDescription("");
 			chart.setGridBackgroundColor(Color.DKGRAY);
 			chart.setBackgroundColor(Color.BLACK);
@@ -634,4 +701,31 @@ public class QuoteViewFragment extends Fragment implements OnClickListener {
 		return response;
 	}
 
+	public class FormatterK implements ValueFormatter {
+
+	    private DecimalFormat mFormat;
+
+	    public FormatterK() {
+	        mFormat = new DecimalFormat("###,###,###"); // use one decimal
+	    }
+
+	    @Override
+	    public String getFormattedValue(float value) {
+	        return mFormat.format(value) + "k"; // append a dollar-sign
+	    }
+	}
+	
+	public class FormatterM implements ValueFormatter {
+
+	    private DecimalFormat mFormat;
+
+	    public FormatterM() {
+	        mFormat = new DecimalFormat("###,###,###.0"); // use one decimal
+	    }
+
+	    @Override
+	    public String getFormattedValue(float value) {
+	        return mFormat.format(value) + "m"; // append a dollar-sign
+	    }
+	}
 }

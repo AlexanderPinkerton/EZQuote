@@ -97,9 +97,9 @@ public final class R {
         public static final int mktCapVal=0x7f09001c;
         public static final int newsContentTv=0x7f09003c;
         public static final int newscontainer=0x7f09000a;
-        public static final int notFavIcon=0x7f090033;
+        public static final int notFavIcon=0x7f090032;
         public static final int notFavLL=0x7f090031;
-        public static final int notFavTv=0x7f090032;
+        public static final int notFavTv=0x7f090033;
         public static final int oneMonth=0x7f090011;
         public static final int oneYear=0x7f090014;
         public static final int openTv=0x7f090019;
