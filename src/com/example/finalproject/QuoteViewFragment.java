@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.CombinedChart.DrawOrder;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend.LegendPosition;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.XAxis.XAxisPosition;
 import com.github.mikephil.charting.components.YAxis;
@@ -621,7 +622,7 @@ public class QuoteViewFragment extends Fragment implements OnClickListener {
 	        
 
 	        YAxis leftAxis = chart.getAxisLeft();
-	        leftAxis.setAxisMinValue((float) (Collections.min(stockClose)*0.7));
+	        leftAxis.setAxisMinValue((float) (Collections.min(stockClose)*0.8));
 	        leftAxis.setDrawGridLines(false);
 
 	        XAxis xAxis = chart.getXAxis();
@@ -630,7 +631,7 @@ public class QuoteViewFragment extends Fragment implements OnClickListener {
 	        CombinedData data = new CombinedData(stockDate);
 
 	        LineDataSet lineSet = new LineDataSet(valsPrice, "Price");
-	        lineSet.setValueTextColor(Color.WHITE);
+	        lineSet.setValueTextSize(0);
 	        lineSet.setCircleSize(1f);
 	        lineSet.setColor(Color.WHITE);
 	        lineSet.setCircleColor(Color.WHITE);
@@ -638,11 +639,13 @@ public class QuoteViewFragment extends Fragment implements OnClickListener {
 	        lineData.addDataSet(lineSet);
 	        
 	        BarDataSet barSet = new BarDataSet(valsVolume, "Volume");
+	        
 	        barSet.setAxisDependency(YAxis.AxisDependency.RIGHT);
-	        barSet.setValueTextColor(Color.WHITE);;
+	        barSet.setValueTextSize(0);
 	        barData.addDataSet(barSet);
 	        
 
+	        
 	        data.setData(lineData);
 	        data.setData(barData);
 			
@@ -671,7 +674,8 @@ public class QuoteViewFragment extends Fragment implements OnClickListener {
 			chart.getXAxis().setPosition(XAxisPosition.TOP);
 			chart.getAxisLeft().setTextColor(Color.WHITE);
 			chart.getAxisRight().setTextColor(Color.WHITE);
-			chart.getLegend().setEnabled(false);
+			chart.getLegend().setPosition(LegendPosition.BELOW_CHART_CENTER);
+			chart.getLegend().setXEntrySpace(50f);
 			chart.getLegend().setTextColor(Color.WHITE);
 			chart.getAxisLeft().setStartAtZero(false);
 			chart.getAxisRight().setStartAtZero(true);
