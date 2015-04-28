@@ -618,7 +618,7 @@ public class QuoteViewFragment extends Fragment implements OnClickListener {
 	        });
 
 	        rightAxis.setDrawGridLines(false);
-	        rightAxis.setAxisMaxValue((float) (Collections.max(stockVolume)*1.6));
+	        rightAxis.setAxisMaxValue((float) (Collections.max(stockVolume)*2));
 	        
 
 	        YAxis leftAxis = chart.getAxisLeft();
