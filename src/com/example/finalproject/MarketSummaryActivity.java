@@ -12,6 +12,7 @@ import java.util.List;
 import org.json.JSONException;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.Context;
@@ -31,6 +32,7 @@ import com.example.finalproject.QuoteViewFragment.QuoteViewDelegate;
 import com.example.finalproject.StockListFragment.JSONQuoteAsyncTask;
 import com.example.finalproject.StockListFragment.StockDelegate;
 import com.example.finalproject.StockNewsFragment.NewsDelegate;
+import com.example.pojo.Security;
 import com.parse.ParseUser;
 
 public class MarketSummaryActivity extends Activity implements NewsDelegate, StockDelegate, 
@@ -71,6 +73,7 @@ public class MarketSummaryActivity extends Activity implements NewsDelegate, Sto
 
 		
 		startService(new Intent(this, AlertService.class));
+		
 	}
 
 	
@@ -98,6 +101,8 @@ public class MarketSummaryActivity extends Activity implements NewsDelegate, Sto
 		int id = item.getItemId();
 		if (id == R.id.logout) {
 			ParseUser.logOut();
+			Intent i = new Intent(MarketSummaryActivity.this,LoginActivity.class);
+			startActivity(i);
 			finish();
 			return true;
 		}
@@ -109,14 +114,26 @@ public class MarketSummaryActivity extends Activity implements NewsDelegate, Sto
 
 
 	public void getQuote(Security stockObj){
-		getFragmentManager()
-		.beginTransaction()
-		.remove(getFragmentManager().findFragmentByTag("stocklist"))
-		.remove(getFragmentManager().findFragmentByTag("newslist"))
-		.add(R.id.detailcontainer, new QuoteViewFragment(stockObj), "quoteview")
-		.addToBackStack(null)
-		.commit();
-		Log.d("ASLKJASDLKJSADLJ", "THIS HAPPENED");
+		
+		FragmentManager manager = getFragmentManager();
+		
+		if(manager.findFragmentByTag("quoteview") != null && manager.findFragmentByTag("quoteview").isAdded()){
+			manager.beginTransaction()
+			.replace(R.id.detailcontainer, new QuoteViewFragment(stockObj), "quoteview")
+			.addToBackStack(null)
+			.commit();
+		}else{
+			manager
+			.beginTransaction()
+			.remove(getFragmentManager().findFragmentByTag("stocklist"))
+			.remove(getFragmentManager().findFragmentByTag("newslist"))
+			.add(R.id.detailcontainer, new QuoteViewFragment(stockObj), "quoteview")
+			.addToBackStack(null)
+			.commit();
+			Log.d("ASLKJASDLKJSADLJ", "THIS HAPPENED");
+		}
+		
+		manager.executePendingTransactions();
 		
 	}
 

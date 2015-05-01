@@ -1,18 +1,31 @@
 package com.example.finalproject;
 
-import com.parse.LogInCallback;
-import com.parse.ParseException;
-import com.parse.ParseUser;
+import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
+
+import com.example.adapter.AboutUsAdapter;
+import com.example.pojo.AboutUs;
+import com.parse.LogInCallback;
+import com.parse.ParseException;
+import com.parse.ParseUser;
 
 
 /*
@@ -101,6 +114,71 @@ public class LoginActivity extends Activity implements OnClickListener{
 	}
 	
 	
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		 	MenuInflater inflater = getMenuInflater();
+	        inflater.inflate(R.menu.about_us, menu);
+
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		int id = item.getItemId();
+		if (id == R.id.aboutUs) {
+			
+			AlertDialog.Builder builderSingle = new AlertDialog.Builder(
+                    LoginActivity.this,AlertDialog.THEME_HOLO_DARK);
+            builderSingle.setTitle("About Us");
+            LinearLayout LL = new LinearLayout(this);
+    	    LL.setOrientation(LinearLayout.VERTICAL);
+
+    	    LayoutParams LLParams = new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
+    	    
+    	    LL.setLayoutParams(LLParams);
+
+            ListView lv = new ListView(this);
+            ArrayList<AboutUs> aList = new ArrayList<AboutUs>();
+            AboutUs udeepObj = new AboutUs();
+            udeepObj.setName("Udeep Manchanda");
+            udeepObj.setEmail("udeep.m@gmail.com | umanchan@uncc.edu");
+            udeepObj.setPic(R.drawable.udeep);
+            AboutUs alexObj = new AboutUs();
+            alexObj.setName("Alexander Pinkerton");
+            alexObj.setEmail("alexpinkerton88@gmail.com | apinkert@uncc.edu");
+            alexObj.setPic(R.drawable.alex);
+            AboutUs tianyiObj = new AboutUs();
+            tianyiObj.setName("Tianyi Xie");
+            tianyiObj.setEmail("tianyi.xie11@gmail.com | txie@uncc.edu");
+            tianyiObj.setPic(R.drawable.tianyii);
+            
+            aList.add(udeepObj);
+            aList.add(alexObj);
+            aList.add(tianyiObj);
+            
+            final ArrayAdapter<AboutUs> arrayAdapter = new AboutUsAdapter(this, R.layout.aboutus_listview, aList);
+            lv.setAdapter(arrayAdapter);
+            LL.addView(lv);
+            builderSingle.setView(LL);
+            builderSingle.setPositiveButton("OK",
+                    new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+			builderSingle.show();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
 	
 	
 	

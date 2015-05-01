@@ -86,12 +86,14 @@
         android:id="@+id/buttonLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/blue_ezquote"
         android:text="@string/login" />
 
     <Button
         android:id="@+id/buttonCreateNewAccount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/blue_ezquote"
         android:text="@string/new_account" />
 
 </LinearLayout>

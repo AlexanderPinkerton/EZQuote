@@ -6,6 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/shape_background_dark"
     tools:context="com.example.inclass08.SignUp" >
 
        <EditText
@@ -16,6 +17,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
         android:ems="10"
+        android:textColor="@color/blue_ezquote"
         android:hint="@string/name"
         android:inputType="textPersonName" >
 
@@ -30,6 +32,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:ems="10"
+        android:textColor="@color/blue_ezquote"
         android:hint="@string/email" android:inputType="textEmailAddress">
 
     </EditText>
@@ -42,6 +45,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:ems="10"
+        android:textColor="@color/blue_ezquote"
         android:hint="@string/password"
         android:inputType="textPassword" />
 
@@ -53,25 +57,27 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:ems="10"
+        android:textColor="@color/blue_ezquote"
         android:hint="@string/confirm_password"
         android:inputType="textPassword" />
-    
-    
+
     <Button
         android:id="@+id/buttonSignup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/editTextPasswordConfirm"
         android:layout_below="@+id/editTextPasswordConfirm"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="14dp"
-        android:text="@string/signup" />
+        android:layout_marginTop="74dp"
+        android:text="@string/signup"
+        android:textColor="@color/blue_ezquote" />
 
     <Button
         android:id="@+id/buttonCancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/buttonSignup"
+        android:layout_alignParentRight="true"
         android:layout_below="@+id/buttonSignup"
-        android:text="@string/cancel" />
+        android:text="@string/cancel"
+        android:textColor="@color/blue_ezquote" />
 
 </RelativeLayout>

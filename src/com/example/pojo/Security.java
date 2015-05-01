@@ -1,4 +1,4 @@
-package com.example.finalproject;
+package com.example.pojo;
 
 import java.io.Serializable;
 

@@ -1,8 +1,13 @@
-package com.example.finalproject;
+package com.example.adapter;
 
 
 
 import java.util.List;
+
+import com.example.finalproject.R;
+import com.example.finalproject.StockListFragment;
+import com.example.finalproject.R.id;
+import com.example.pojo.Security;
 
 import android.app.Activity;
 import android.content.Context;

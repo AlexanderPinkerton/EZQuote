@@ -1,4 +1,4 @@
-package com.example.finalproject;
+package com.example.pojo;
 
 public class Headline {
 	

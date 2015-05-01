@@ -9,6 +9,9 @@ import java.util.ArrayList;
 
 import org.json.JSONException;
 
+import com.example.adapter.StockNewsAdapter;
+import com.example.pojo.Headline;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -30,6 +33,7 @@ public class StockNewsFragment extends Fragment{
 	ArrayList<Headline> newsItems;
 	ListView newsListerLV;
 	ArrayAdapter<Headline> adapter;
+	
 	
 	@Override
 	public void onAttach(Activity activity) {

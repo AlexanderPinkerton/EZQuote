@@ -1,17 +1,26 @@
-package com.example.finalproject;
+package com.example.pojo;
 
 public class StockAlert {
 
-	String oldPrice, targetPrice, stockSymbol;
+	String oldPrice, targetPrice, stockSymbol,stockState;
 	
 	
 	
 
-	public StockAlert(String oldPrice, String targetPrice, String stockSymbol) {
+	public StockAlert(String oldPrice, String targetPrice, String stockSymbol,String stockState) {
 		super();
 		this.oldPrice = oldPrice;
 		this.targetPrice = targetPrice;
 		this.stockSymbol = stockSymbol;
+		this.stockState =  stockState;
+	}
+
+	public String getStockState() {
+		return stockState;
+	}
+
+	public void setStockState(String stockState) {
+		this.stockState = stockState;
 	}
 
 	public String getOldPrice() {

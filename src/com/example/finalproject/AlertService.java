@@ -30,6 +30,8 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.example.pojo.Security;
+import com.example.pojo.StockAlert;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -46,7 +48,7 @@ public class AlertService extends Service {
 	ArrayList<Security> stockList;
 	List<ParseObject> alertObjs;
  
-	public static final long NOTIFY_INTERVAL = 5 * 60 * 1000; // 5 minutes
+	public static final long NOTIFY_INTERVAL = 5 * 1000; // 5 minutes
 
 	// run on another Thread to avoid crash
 	private Handler mHandler = new Handler();
@@ -81,7 +83,9 @@ public class AlertService extends Service {
 				public void run() {
 					// display toast
 				//	sendAlert();
-					checkAlerts();
+					if(ParseUser.getCurrentUser() != null ){
+						checkAlerts();
+					}
 				}
 
 			});
@@ -144,7 +148,7 @@ public class AlertService extends Service {
 				// TODO Auto-generated method stub
 				alertObjs = objects;
 				for(ParseObject obj: objects){
-					alertList.add(new StockAlert(obj.getString("oldPrice"), obj.getString("targetPrice"), obj.getString("symbol")));
+					alertList.add(new StockAlert(obj.getString("oldPrice"), obj.getString("targetPrice"), obj.getString("symbol"),obj.getString("StockState")));
 					set.add(obj.getString("symbol"));
 				}
 				Iterator<String> i = set.iterator();
@@ -159,9 +163,9 @@ public class AlertService extends Service {
 					alertStocks = alertStocks.substring(0,alertStocks.length()-1);
 				}
 				
-				
-				new JSONQuoteAsyncTask().execute("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22"+ alertStocks +"%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=");	
-
+				if(alertStocks.trim().length()>0){
+					new JSONQuoteAsyncTask().execute("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22"+ alertStocks +"%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=");	
+				}
 				
 			}
 		});
@@ -173,11 +177,11 @@ public class AlertService extends Service {
 		
 	}
 
-	public void sendAlert(String stockSymbol, String targetPrice) {
+	public void sendAlert(String stockSymbol, String targetPrice,String stockState) {
 		Notification.Builder mBuilder = new Notification.Builder(this)
 				.setSmallIcon(R.drawable.appicon)
 				.setContentTitle("EZQuote - '" + stockSymbol + "'")
-				.setContentText("Target Price " + targetPrice + " reached! Hurry!");
+				.setContentText("Current Stock Price is " + stockState + " Target Price " + targetPrice + " Hurry!");
 		// Creates an explicit intent for an Activity in your app
 		Intent resultIntent = new Intent(this, MarketSummaryActivity.class);
 
@@ -259,7 +263,7 @@ public class AlertService extends Service {
 
 		@Override
 		protected void onPostExecute(ArrayList<Security> result) {
-			// TODO Auto-generated method stub
+	
 			super.onPostExecute(result);
 		
 					
@@ -271,10 +275,20 @@ public class AlertService extends Service {
 						
 						//TODO fix this logic, this is only for gains.
 						
-						if(sa.getStockSymbol().equalsIgnoreCase(s.getSymbol())
-								&& Double.parseDouble(sa.getTargetPrice()) <= Double.parseDouble(s.getAskPrice())){
+						if(sa.getStockSymbol().equalsIgnoreCase(s.getSymbol())){
+							//	&& Double.parseDouble(sa.getTargetPrice()) <= Double.parseDouble(s.getAskPrice())){
 							
-							sendAlert(sa.getStockSymbol(),sa.getTargetPrice());
+							if(sa.getStockState().equals("UP") && 
+									 Double.parseDouble(sa.getTargetPrice()) <= Double.parseDouble(s.getAskPrice())){
+							
+							sendAlert(sa.getStockSymbol(),sa.getTargetPrice() , "UP");
+							
+							}else if(sa.getStockState().equals("DOWN") && 
+									 Double.parseDouble(sa.getTargetPrice()) >= Double.parseDouble(s.getAskPrice())){
+								
+							sendAlert(sa.getStockSymbol(),sa.getTargetPrice() , "DOWN");
+							
+							}
 						}
 					}
 				}

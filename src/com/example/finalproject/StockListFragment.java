@@ -33,6 +33,8 @@ import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.baoyz.swipemenulistview.SwipeMenuListView.OnMenuItemClickListener;
 import com.baoyz.swipemenulistview.SwipeMenuListView.OnSwipeListener;
+import com.example.adapter.StockListAdapter;
+import com.example.pojo.Security;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
