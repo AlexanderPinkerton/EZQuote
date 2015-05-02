@@ -1,5 +1,9 @@
 package com.example.finalproject;
 
+
+/*
+ * Author: Alexander Pinkerton, Udeep Manchanda, Tianyi Xie
+ */
 import android.app.Application;
 
 import com.parse.Parse;

@@ -10,4 +10,9 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="Logout"/>
+       <item
+        android:id="@+id/manageAlerts"
+        android:orderInCategory="90"
+        android:showAsAction="never"
+        android:title="Manage Alerts"/>
 </menu>

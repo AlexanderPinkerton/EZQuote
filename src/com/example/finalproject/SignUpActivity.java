@@ -1,7 +1,13 @@
 package com.example.finalproject;
 
+/*
+ * Author: Alexander Pinkerton, Udeep Manchanda, Tianyi Xie
+ */
+
 import android.app.Activity;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
@@ -38,6 +45,9 @@ public class SignUpActivity extends Activity implements OnClickListener{
 		editTextEmail = (EditText)findViewById(R.id.editTextEmail);
 		editTextPassword = (EditText)findViewById(R.id.editTextPassword);
 		editTextPasswordConfirm = (EditText)findViewById(R.id.editTextPasswordConfirm);
+		
+		
+		
 				
 	}
 
@@ -48,7 +58,7 @@ public class SignUpActivity extends Activity implements OnClickListener{
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.buttonSignup:
-			
+			if(isConnected()){
 
 			if(editTextEmail.getText() != null && editTextEmail.getText().toString().trim().length() == 0){
 				Toast.makeText(SignUpActivity.this, "Email cannot be empty.", Toast.LENGTH_SHORT).show();
@@ -71,6 +81,9 @@ public class SignUpActivity extends Activity implements OnClickListener{
 						  public void done(ParseException e) {
 						    if (e == null) {
 						    	Toast.makeText(SignUpActivity.this, "Account Created.", Toast.LENGTH_SHORT).show();
+						    	saveInFavorites("GOOG");
+						    	saveInFavorites("AAPL");
+						    	
 						    	Intent i = new Intent(SignUpActivity.this,MarketSummaryActivity.class);
 						    	startActivity(i);
 								finish();
@@ -89,7 +102,7 @@ public class SignUpActivity extends Activity implements OnClickListener{
 				
 			}
 			
-			
+			}
 			
 	
 			break;
@@ -98,11 +111,31 @@ public class SignUpActivity extends Activity implements OnClickListener{
 			break;
 		
 		}
+
+	}
+	private void saveInFavorites(String stockSymbol) {
+		ParseObject favObj = new ParseObject("Favorites");
+		favObj.put("UserName", ParseUser.getCurrentUser().getUsername());
+		favObj.put("StockName", stockSymbol);
+
+		favObj.saveInBackground();
+
 	}
 	
 	
-	
-	
+	public boolean isConnected() {
+		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(SignUpActivity.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+		if (networkInfo != null && networkInfo.isConnected()) {
+			// Toast.makeText(MainActivity.this, "Internet is connected",
+			// Toast.LENGTH_SHORT).show();
+			return true;
+		} else {
+			Toast.makeText(SignUpActivity.this, "No Internet Connection",
+					Toast.LENGTH_SHORT).show();
+			return false;
+		}
+	}
 	
 
 }

@@ -1,10 +1,18 @@
 package com.example.pojo;
 
+/*
+ * Author: Alexander Pinkerton, Udeep Manchanda, Tianyi Xie
+ */
+
+
 public class StockAlert {
 
 	String oldPrice, targetPrice, stockSymbol,stockState;
 	
-	
+	public StockAlert() {
+		super();
+		
+	}
 	
 
 	public StockAlert(String oldPrice, String targetPrice, String stockSymbol,String stockState) {

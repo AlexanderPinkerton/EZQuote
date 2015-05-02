@@ -1,5 +1,8 @@
 package com.example.adapter;
 
+/*
+ * Author: Alexander Pinkerton, Udeep Manchanda, Tianyi Xie
+ */
 
 
 import java.util.List;

@@ -1,11 +1,17 @@
 package com.example.finalproject;
 
+/*
+ * Author: Alexander Pinkerton, Udeep Manchanda, Tianyi Xie
+ */
+
 import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -78,7 +84,7 @@ public class LoginActivity extends Activity implements OnClickListener{
 			
 		case R.id.buttonLogin:
 
-			
+			if(isConnected()){
 		
 			if(email.getText() != null && email.getText().toString().trim().length() == 0){
 				Toast.makeText(LoginActivity.this, "Email cannot be empty.", Toast.LENGTH_SHORT).show();
@@ -105,7 +111,7 @@ public class LoginActivity extends Activity implements OnClickListener{
 					}
 					});
 			}
-
+			}
 			
 			
 			break;
@@ -179,7 +185,19 @@ public class LoginActivity extends Activity implements OnClickListener{
 		return super.onOptionsItemSelected(item);
 	}
 
-	
+	public boolean isConnected() {
+		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(LoginActivity.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+		if (networkInfo != null && networkInfo.isConnected()) {
+			// Toast.makeText(MainActivity.this, "Internet is connected",
+			// Toast.LENGTH_SHORT).show();
+			return true;
+		} else {
+			Toast.makeText(LoginActivity.this, "No Internet Connection",
+					Toast.LENGTH_SHORT).show();
+			return false;
+		}
+	}
 	
 	
 	

@@ -1,5 +1,9 @@
 package com.example.finalproject;
 
+/*
+ * Author: Alexander Pinkerton, Udeep Manchanda, Tianyi Xie
+ */
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;

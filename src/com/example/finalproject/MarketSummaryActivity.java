@@ -1,38 +1,49 @@
 package com.example.finalproject;
 
+/*
+ * Author: Alexander Pinkerton, Udeep Manchanda, Tianyi Xie
+ */
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import org.json.JSONException;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
-import android.app.SearchManager;
-import android.app.SearchableInfo;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.adapter.AlertDialogAdapter;
 import com.example.finalproject.QuoteViewFragment.QuoteViewDelegate;
-import com.example.finalproject.StockListFragment.JSONQuoteAsyncTask;
 import com.example.finalproject.StockListFragment.StockDelegate;
 import com.example.finalproject.StockNewsFragment.NewsDelegate;
 import com.example.pojo.Security;
+import com.example.pojo.StockAlert;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 public class MarketSummaryActivity extends Activity implements NewsDelegate, StockDelegate, 
@@ -40,6 +51,9 @@ public class MarketSummaryActivity extends Activity implements NewsDelegate, Sto
 
 	private SearchView mSearchView;
 	private long lastSearchTime=0;
+	ArrayAdapter<StockAlert> arrayAdapter;
+	ListView lv;
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,23 +69,10 @@ public class MarketSummaryActivity extends Activity implements NewsDelegate, Sto
 			
 		}
 		
-		
-		//Quote Search
-		//new JSONQuoteAsyncTask().execute("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22GOOG%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=");	
-		
-		//News Search
-		//new JSONNewsAsyncTask().execute("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D'http%3A%2F%2Ffinance.yahoo.com%2Fq%3Fs%3DGOOG'%20and%20xpath%3D'%2F%2Fdiv%5B%40id%3D%22yfi_headlines%22%5D%2Fdiv%5B2%5D%2Ful%2Fli%2Fa'&format=json&diagnostics=true&callback=");
-		
-		
-		//select * from html where url='http://finance.yahoo.com/q?s=yhoo' and xpath='//div[@id="yfi_headlines"]/div[2]/ul/li/a'
-		//https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D'http%3A%2F%2Ffinance.yahoo.com%2Fq%3Fs%3Dyhoo'%20and%20xpath%3D'%2F%2Fdiv%5B%40id%3D%22yfi_headlines%22%5D%2Fdiv%5B2%5D%2Ful%2Fli%2Fa'&diagnostics=true
-		//select * from yahoo.finance.quotes where symbol in ("GOOG")
-		
-		StockListFragment stockLister = (StockListFragment) getFragmentManager().findFragmentByTag("stocklist");
+	
+	/*	StockListFragment stockLister = (StockListFragment) getFragmentManager().findFragmentByTag("stocklist");
 		StockNewsFragment newsLister = (StockNewsFragment) getFragmentManager().findFragmentByTag("newslist");
-		//stockLister.updateSecurities(stocks);
-
-		
+	*/
 		startService(new Intent(this, AlertService.class));
 		
 	}
@@ -98,6 +99,7 @@ public class MarketSummaryActivity extends Activity implements NewsDelegate, Sto
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
+		if(isConnected()){
 		int id = item.getItemId();
 		if (id == R.id.logout) {
 			ParseUser.logOut();
@@ -105,8 +107,71 @@ public class MarketSummaryActivity extends Activity implements NewsDelegate, Sto
 			startActivity(i);
 			finish();
 			return true;
+		}else if (id == R.id.manageAlerts) {
+			
+			final AlertDialog.Builder builderSingle = new AlertDialog.Builder(
+					MarketSummaryActivity.this, AlertDialog.THEME_HOLO_DARK);
+			builderSingle.setTitle("Manage Alerts");
+			final LinearLayout LL = new LinearLayout(this);
+			LL.setOrientation(LinearLayout.VERTICAL);
+			final ArrayList<StockAlert> aList = new ArrayList<StockAlert>();
+			builderSingle.setCancelable(false);
+			ParseQuery<ParseObject> alertQuery = ParseQuery.getQuery("Alert");
+			alertQuery.whereEqualTo("UserName", ParseUser.getCurrentUser()
+					.getUsername());
+			alertQuery.findInBackground(new FindCallback<ParseObject>() {
+
+				@Override
+				public void done(List<ParseObject> arg0, ParseException arg1) {
+
+					if (arg1 == null) {
+						for (ParseObject obj : arg0) {
+							StockAlert a = new StockAlert();
+							a.setStockSymbol(obj.getString("symbol"));
+							a.setOldPrice(obj.getString("oldPrice"));
+							a.setTargetPrice(obj.getString("targetPrice"));
+							a.setStockState(obj.getString("StockState"));
+							aList.add(a);
+						}
+
+						LayoutParams LLParams = new LayoutParams(
+								LayoutParams.MATCH_PARENT,
+								LayoutParams.MATCH_PARENT);
+
+						LL.setLayoutParams(LLParams);
+
+						lv = new ListView(MarketSummaryActivity.this);
+
+						arrayAdapter = new AlertDialogAdapter(
+								MarketSummaryActivity.this,
+								R.layout.alert_list_view, aList);
+						lv.setAdapter(arrayAdapter);
+						LL.addView(lv);
+						builderSingle.setView(LL);
+						builderSingle.setPositiveButton("OK",
+								new DialogInterface.OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										dialog.dismiss();
+									}
+								});
+						builderSingle.show();
+
+					} else {
+						arg1.printStackTrace();
+					}
+				}
+			});
+			
+			
+			
+			return true;
+		}
 		}
 		return super.onOptionsItemSelected(item);
+		
 	}
 
 	
@@ -143,10 +208,6 @@ public class MarketSummaryActivity extends Activity implements NewsDelegate, Sto
 	public void securityClicked(Security stockObj) {
 		getQuote(stockObj);	
 	}
-
-
-
-
 
 
 
@@ -201,20 +262,14 @@ public class MarketSummaryActivity extends Activity implements NewsDelegate, Sto
 	    public boolean onQueryTextSubmit(String stockSymbol) {
 	    	
 	    	//This should fix the bug. Only one search per second and a half.
+	    	if(isConnected()){
 	    	stockSymbol = stockSymbol.toUpperCase();
 	    	long searchTime = System.currentTimeMillis();
 	    	if(searchTime > lastSearchTime + 1500){
 		    	new JSONQuoteSearchAsyncTask().execute("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22"+ stockSymbol +"%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=");	
 	    		lastSearchTime = searchTime;
 	    	}
-	    	
-	    	
-	    	
-	        /*StockNewsFragment snf = (StockNewsFragment) getFragmentManager().findFragmentByTag("newslist");
-			
-			snf.refresh(stockSymbol);*/
-	        
-	        
+	    	}
 	        return true;
 	    }
 
@@ -308,13 +363,32 @@ public class MarketSummaryActivity extends Activity implements NewsDelegate, Sto
 				}
 				
 			}
-			
-			
 
-		
-		
 
-	
+
+
+
+		public void refreshReminders(List<StockAlert> alertList) {
+
+			arrayAdapter.notifyDataSetChanged();
+			Toast.makeText(this, "Alert Removed!", Toast.LENGTH_SHORT).show();
+			
+		}
+			
+		public boolean isConnected() {
+			ConnectivityManager connMgr = (ConnectivityManager) getSystemService(MarketSummaryActivity.CONNECTIVITY_SERVICE);
+			NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+			if (networkInfo != null && networkInfo.isConnected()) {
+				// Toast.makeText(MainActivity.this, "Internet is connected",
+				// Toast.LENGTH_SHORT).show();
+				return true;
+			} else {
+				Toast.makeText(MarketSummaryActivity.this, "No Internet Connection",
+						Toast.LENGTH_SHORT).show();
+				return false;
+			}
+		}
+		
 
 
 }

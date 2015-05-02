@@ -1,5 +1,9 @@
 package com.example.pojo;
 
+/*
+ * Author: Alexander Pinkerton, Udeep Manchanda, Tianyi Xie
+ */
+
 public class Headline {
 	
 	String title, link, source,sourceBy;

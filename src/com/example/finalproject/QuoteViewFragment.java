@@ -1,5 +1,9 @@
 package com.example.finalproject;
 
+/*
+ * Author: Alexander Pinkerton, Udeep Manchanda, Tianyi Xie
+ */
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -14,11 +18,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
@@ -208,6 +216,9 @@ public class QuoteViewFragment extends Fragment implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
+		
+		if(isConnected()){
+		
 		switch (v.getId()) {
 
 		case R.id.alertset:
@@ -342,6 +353,7 @@ public class QuoteViewFragment extends Fragment implements OnClickListener {
 			break;
 
 		}
+	}
 
 	}
 	
@@ -454,14 +466,18 @@ public class QuoteViewFragment extends Fragment implements OnClickListener {
 				| InputType.TYPE_NUMBER_FLAG_DECIMAL
 				| InputType.TYPE_NUMBER_FLAG_SIGNED);
 		input.setTextColor(Color.parseColor("#33b5e5"));
+		int maxLength = 9;    
+		input.setFilters(new InputFilter[] {new InputFilter.LengthFilter(maxLength)});
 		
 		final Switch sw = new Switch(getActivity());
-		sw.setText("Stock State");
-		sw.setTextSize(22);
-		sw.setPadding(5, 10, 5, 10);
-		sw.setTextOff("Down");
-		sw.setTextOn("Up");
+		sw.setText("Alert Type");
+		sw.setTextSize(20);
+		sw.setPadding(0, 10, 5, 10);
+		sw.setTextOff("Loss");
+		sw.setTextOn("Gain");
 		sw.setGravity(Gravity.CENTER);
+		
+	
 		sw.setTextColor(Color.parseColor("#33b5e5"));
 		LL.setPadding(5, 5, 5, 5);
 		LL.addView(input);
@@ -490,9 +506,9 @@ public class QuoteViewFragment extends Fragment implements OnClickListener {
 				alertObj.put("oldPrice", stockObj.getAskPrice());
 				alertObj.put("symbol", stockSymbol);
 				if(sw.isChecked()){
-					alertObj.put("StockState", "UP");
+					alertObj.put("StockState", "GAIN");
 				}else{
-					alertObj.put("StockState", "DOWN");
+					alertObj.put("StockState", "LOSS");
 				}
 				
 				alertObj.saveInBackground(new SaveCallback() {
@@ -776,4 +792,19 @@ public class QuoteViewFragment extends Fragment implements OnClickListener {
 	        return mFormat.format(value) + "m"; // append a dollar-sign
 	    }
 	}
+	
+	public boolean isConnected() {
+		ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+		if (networkInfo != null && networkInfo.isConnected()) {
+			// Toast.makeText(MainActivity.this, "Internet is connected",
+			// Toast.LENGTH_SHORT).show();
+			return true;
+		} else {
+			Toast.makeText(getActivity(), "No Internet Connection",
+					Toast.LENGTH_SHORT).show();
+			return false;
+		}
+	}
+	
 }

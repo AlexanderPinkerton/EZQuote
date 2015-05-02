@@ -1,5 +1,9 @@
 package com.example.finalproject;
 
+/*
+ * Author: Alexander Pinkerton, Udeep Manchanda, Tianyi Xie
+ */
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,8 +18,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -63,13 +70,6 @@ public class StockListFragment extends Fragment{
 		
 		super.onActivityCreated(savedInstanceState);
 		
-	//	TextView title = (TextView) getActivity().findViewById(R.id.tv_listtitle);
-	//	title.setText("Market Summary");
-		
-		
-		ArrayList<Security> a = new ArrayList<Security>();
-		
-		
 		lv = (SwipeMenuListView) getActivity().findViewById(R.id.lv_stock);
 		lv.setChoiceMode(SwipeMenuListView.CHOICE_MODE_SINGLE);
 		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -77,10 +77,12 @@ public class StockListFragment extends Fragment{
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				
+			if(isConnected()){
 				lv.setItemChecked(position, true);
 				
 				mListener.passSymbolToNews(stockListAdapter.getItem(position).getSymbol());
-				
+			}
 			}
 		});
 		
@@ -131,6 +133,8 @@ public class StockListFragment extends Fragment{
 				lv.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 					@Override
 					public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+						
+						if(isConnected()){
 						Security item = securityList.get(position);
 						switch (index) {
 						case 0:
@@ -146,6 +150,7 @@ public class StockListFragment extends Fragment{
 							securityList.remove(position);
 							stockListAdapter.notifyDataSetChanged();
 							break;
+						}
 						}
 						return false;
 					}
@@ -165,20 +170,7 @@ public class StockListFragment extends Fragment{
 					}
 				});
 
-				// other setting
-//				listView.setCloseInterpolator(new BounceInterpolator());
-				
-				// test item long click
-			/*	lv.setOnItemLongClickListener(new OnItemLongClickListener() {
 
-					@Override
-					public boolean onItemLongClick(AdapterView<?> parent, View view,
-							int position, long id) {
-						Toast.makeText(getActivity(), position + " long click", 0).show();
-						return false;
-					}
-				});
-		*/
 		favStocks = "";
 		ParseQuery<ParseObject> favQuery = ParseQuery.getQuery("Favorites");
 		favQuery.whereEqualTo("UserName", ParseUser.getCurrentUser().getUsername());
@@ -211,7 +203,7 @@ public class StockListFragment extends Fragment{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
+		
 		View rootView = inflater.inflate(R.layout.fragment_stocklist, container,false);
 		return rootView;
 	}
@@ -219,7 +211,7 @@ public class StockListFragment extends Fragment{
 	
 	public void updateSecurities(String stocks){
 		new JSONQuoteAsyncTask().execute("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22"+ stocks +"%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=");	
-		//new JSONQuoteAsyncTask().execute("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22GOOG%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=");
+	
 	}
 	
 	
@@ -287,15 +279,7 @@ public class StockListFragment extends Fragment{
 				securityList = result;
 				stockListAdapter = new StockListAdapter(getActivity(), R.layout.stock_listview,securityList,StockListFragment.this,"Change");
 				lv.setAdapter(stockListAdapter);
-				/*lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-					@Override
-					public void onItemClick(AdapterView<?> parent, View view,
-							int position, long id) {
-						Log.d("here","yes");
-						
-					}
-				});*/
+			
 				Log.d("DEMO", result.toString());
 			}
 			
@@ -355,5 +339,20 @@ private void removeFromFavorites(String stockSymbol) {
 		});
 		
 	}
+
+public boolean isConnected() {
+	ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+	NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+	if (networkInfo != null && networkInfo.isConnected()) {
+		// Toast.makeText(MainActivity.this, "Internet is connected",
+		// Toast.LENGTH_SHORT).show();
+		return true;
+	} else {
+		Toast.makeText(getActivity(), "No Internet Connection",
+				Toast.LENGTH_SHORT).show();
+		return false;
+	}
+}
+
 
 }

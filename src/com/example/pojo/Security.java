@@ -1,5 +1,10 @@
 package com.example.pojo;
 
+/*
+ * Author: Alexander Pinkerton, Udeep Manchanda, Tianyi Xie
+ */
+
+
 import java.io.Serializable;
 
 

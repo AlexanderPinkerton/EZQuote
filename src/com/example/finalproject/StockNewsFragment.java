@@ -1,5 +1,9 @@
 package com.example.finalproject;
 
+/*
+ * Author: Alexander Pinkerton, Udeep Manchanda, Tianyi Xie
+ */
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,12 +13,12 @@ import java.util.ArrayList;
 
 import org.json.JSONException;
 
-import com.example.adapter.StockNewsAdapter;
-import com.example.pojo.Headline;
-
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,6 +30,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.example.adapter.StockNewsAdapter;
+import com.example.pojo.Headline;
 
 public class StockNewsFragment extends Fragment{
 	
@@ -56,16 +63,19 @@ public class StockNewsFragment extends Fragment{
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
 					
+					if(isConnected()){
+					
 					String url = newsItems.get(position).getLink();
 					Intent i = new Intent(Intent.ACTION_VIEW);
 					i.setData(Uri.parse(url));
 					startActivity(i);
+					}
 					
 				}
 			});
 		 
 		
-		updateNewsList();
+		updateNewsList(); // default google news on start
 		
 	}
 
@@ -174,6 +184,22 @@ public class StockNewsFragment extends Fragment{
 		
 	}
 
+	
+	public boolean isConnected() {
+		ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+		if (networkInfo != null && networkInfo.isConnected()) {
+			// Toast.makeText(MainActivity.this, "Internet is connected",
+			// Toast.LENGTH_SHORT).show();
+			return true;
+		} else {
+			Toast.makeText(getActivity(), "No Internet Connection",
+					Toast.LENGTH_SHORT).show();
+			return false;
+		}
+	}
+	
+	
 	
 	
 }

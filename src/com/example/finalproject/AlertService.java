@@ -1,5 +1,9 @@
 package com.example.finalproject;
 
+/*
+ * Author: Alexander Pinkerton, Udeep Manchanda, Tianyi Xie
+ */
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,11 +28,14 @@ import android.app.Service;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.pojo.Security;
 import com.example.pojo.StockAlert;
@@ -83,7 +90,7 @@ public class AlertService extends Service {
 				public void run() {
 					// display toast
 				//	sendAlert();
-					if(ParseUser.getCurrentUser() != null ){
+					if(ParseUser.getCurrentUser() != null && isConnected() ){
 						checkAlerts();
 					}
 				}
@@ -92,15 +99,7 @@ public class AlertService extends Service {
 		}
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 
 	@Override
 	public void onDestroy() {
@@ -181,8 +180,9 @@ public class AlertService extends Service {
 		Notification.Builder mBuilder = new Notification.Builder(this)
 				.setSmallIcon(R.drawable.appicon)
 				.setContentTitle("EZQuote - '" + stockSymbol + "'")
-				.setContentText("Current Stock Price is " + stockState + " Target Price " + targetPrice + " Hurry!");
+				.setContentText( stockState + " Target Price " + targetPrice + " reached. Hurry!");
 		// Creates an explicit intent for an Activity in your app
+		
 		Intent resultIntent = new Intent(this, MarketSummaryActivity.class);
 
 		// The stack builder object will contain an artificial back stack for
@@ -204,20 +204,15 @@ public class AlertService extends Service {
 		
 		//Delete the alarm after it goes off.
 		for(ParseObject o : alertObjs){
-			if(stockSymbol.equalsIgnoreCase((o.getString("symbol")))){
-				o.deleteInBackground();
+			if(stockSymbol.equalsIgnoreCase((o.getString("symbol"))) &&
+					targetPrice.equals(o.getString("targetPrice"))   &&
+					stockState.equals(o.getString("StockState"))){
+				
+					o.deleteInBackground();
 			}
 		}
 		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	public class JSONQuoteAsyncTask extends AsyncTask<String, Void, ArrayList<Security>>{
@@ -278,15 +273,15 @@ public class AlertService extends Service {
 						if(sa.getStockSymbol().equalsIgnoreCase(s.getSymbol())){
 							//	&& Double.parseDouble(sa.getTargetPrice()) <= Double.parseDouble(s.getAskPrice())){
 							
-							if(sa.getStockState().equals("UP") && 
+							if(sa.getStockState().equals("GAIN") && 
 									 Double.parseDouble(sa.getTargetPrice()) <= Double.parseDouble(s.getAskPrice())){
 							
-							sendAlert(sa.getStockSymbol(),sa.getTargetPrice() , "UP");
+							sendAlert(sa.getStockSymbol(),sa.getTargetPrice() , "GAIN");
 							
-							}else if(sa.getStockState().equals("DOWN") && 
+							}else if(sa.getStockState().equals("LOSS") && 
 									 Double.parseDouble(sa.getTargetPrice()) >= Double.parseDouble(s.getAskPrice())){
 								
-							sendAlert(sa.getStockSymbol(),sa.getTargetPrice() , "DOWN");
+							sendAlert(sa.getStockSymbol(),sa.getTargetPrice() , "LOSS");
 							
 							}
 						}
@@ -301,6 +296,19 @@ public class AlertService extends Service {
 		
 		
 
+	}
+	
+	public boolean isConnected() {
+		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+		if (networkInfo != null && networkInfo.isConnected()) {
+			// Toast.makeText(MainActivity.this, "Internet is connected",
+			// Toast.LENGTH_SHORT).show();
+			return true;
+		} else {
+			
+			return false;
+		}
 	}
 	
 	

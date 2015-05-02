@@ -1,5 +1,10 @@
 package com.example.finalproject;
 
+/*
+ * Author: Alexander Pinkerton, Udeep Manchanda, Tianyi Xie
+ */
+
+
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
