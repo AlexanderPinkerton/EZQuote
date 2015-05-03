@@ -81,7 +81,7 @@ public class AboutUsAdapter extends ArrayAdapter<AboutUs> {
 
         holder.nameTv.setText(listItem.getName());
         holder.emailTv.setText(listItem.getEmail());
-        holder.picIv.setImageResource(listItem.getPic());
+        //holder.picIv.setImageResource(listItem.getPic());
         
         return convertView;
     }
